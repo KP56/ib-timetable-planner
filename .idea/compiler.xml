@@ -9,5 +9,8 @@
         <module name="timetable-generator" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ib-timetable-planner" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
