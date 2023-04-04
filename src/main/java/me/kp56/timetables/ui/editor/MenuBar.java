@@ -1,6 +1,6 @@
 package me.kp56.timetables.ui.editor;
 
-import me.kp56.timetables.ui.about.AboutMenu;
+import me.kp56.timetables.ui.about.HelpMenu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +48,7 @@ public class MenuBar extends JMenuBar {
         setOpaque(true);
         setBackground(Color.GRAY);
         add(studentsMenu);
-        add(new AboutMenu());
+        add(new HelpMenu());
     }
 
 }
