@@ -1,5 +1,7 @@
 package me.kp56.timetables.ui.editor;
 
+import me.kp56.timetables.ui.about.AboutMenu;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -46,6 +48,7 @@ public class MenuBar extends JMenuBar {
         setOpaque(true);
         setBackground(Color.GRAY);
         add(studentsMenu);
+        add(new AboutMenu());
     }
 
 }
