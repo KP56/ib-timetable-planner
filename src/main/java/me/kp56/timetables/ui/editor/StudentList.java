@@ -25,7 +25,7 @@ public class StudentList extends JPanel {
         studentList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                root.studentDetails.showStudent(studentList.getSelectedValue());
+                root.studentDetails.showStudent(getSelected());
             }
         });
 
@@ -36,8 +36,14 @@ public class StudentList extends JPanel {
         addStudentButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Student.students.add(new Student(JOptionPane.showInputDialog(null, "Enter new student's name:", "Add student")));
+                String name = JOptionPane.showInputDialog(null, "Enter new student's name:", "Add student");
+                if (name.isEmpty()) {
+                    name = "Bezimienny";
+                }
+                Student newStudent = new Student(name);
+                Student.students.add(newStudent);
                 refresh();
+                root.studentDetails.showStudent(newStudent);
             }
         });
 

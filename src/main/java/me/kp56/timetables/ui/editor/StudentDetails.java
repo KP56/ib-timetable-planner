@@ -31,7 +31,6 @@ public class StudentDetails extends JPanel {
         JLabel subjectLabel = new JLabel("Subjects:");
 
 
-        TextField studentNameField = new TextField(50);
         JPanel wrappedStudentNameField = new JPanel();
         wrappedStudentNameField.add(studentNameField);
 
@@ -40,18 +39,25 @@ public class StudentDetails extends JPanel {
         ActionListener actionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                Student currentStudent = root.studentSelector.getSelected();
                 switch (actionEvent.getActionCommand()) {
                     case "Apply":
-                        root.studentSelector.getSelected().name = studentNameField.getText();
-                        root.studentSelector.getSelected().subjects = subjectSelector.getSubjects();
+                        if (studentNameField.getText().isEmpty()) {
+                            currentStudent.name = "Bezimienny";
+                        } else {
+                            currentStudent.name = studentNameField.getText();
+                        }
+                        currentStudent.subjects = subjectSelector.getSubjects();
                         break;
                     case "Delete":
                         if (JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this student?", "Confirm deletion", JOptionPane.YES_NO_OPTION) == 0) {
                             Student.students.remove(root.studentSelector.getSelected());
+                            currentStudent = null;
                         }
                         break;
                 }
                 root.studentSelector.refresh();
+                showStudent(currentStudent);
             }
         };
 
@@ -104,6 +110,8 @@ public class StudentDetails extends JPanel {
         studentNotSelectedWrapper.setLayout(new BoxLayout(studentNotSelectedWrapper, BoxLayout.PAGE_AXIS));
         studentNotSelectedWrapper.add(studentNotSelectedLabel);
         add("none", studentNotSelectedWrapper);
+
+        showStudent(null);
 
     }
 
