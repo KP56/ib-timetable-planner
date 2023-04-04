@@ -10,14 +10,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class UI extends JFrame {
+public class UI {
     public UI() {
-        this.setTitle("Timetable creator 3000");
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setSize(ScreenSize.getInstance().getWidth(), ScreenSize.getInstance().getHeight());
-        getContentPane().add(new StudentEditor());
-
-        this.setVisible(true);
+        new StudentEditor();
 
 
     }

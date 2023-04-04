@@ -5,31 +5,58 @@ import me.kp56.timetables.ui.ScreenSize;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class StudentDetails extends JPanel {
+    private StudentEditor root;
     CardLayout cardLayout = new CardLayout();
-    JPanel studentEditor = new JPanel();
-    GroupLayout studentEditorLayout;
     SubjectSelector subjectSelector = new SubjectSelector();
     TextField studentNameField = new TextField(50);
-    JButton applyButton = new JButton("Apply");
-    JButton deleteButton = new JButton("Delete");
 
-    public StudentDetails() {
-        studentEditorLayout = new GroupLayout(studentEditor);
+
+    public StudentDetails(StudentEditor root) {
+        this.root = root;
+        setLayout(cardLayout);
+
+
+        JPanel studentEditor = new JPanel();
+        GroupLayout studentEditorLayout = new GroupLayout(studentEditor);
         studentEditorLayout.setAutoCreateGaps(true);
         studentEditorLayout.setAutoCreateContainerGaps(true);
-
-
-        setLayout(cardLayout);
         studentEditor.setLayout(studentEditorLayout);
 
 
         JLabel nameLabel = new JLabel("Student's name:");
         JLabel subjectLabel = new JLabel("Subjects:");
+
+
+        TextField studentNameField = new TextField(50);
         JPanel wrappedStudentNameField = new JPanel();
         wrappedStudentNameField.add(studentNameField);
 
+        JButton applyButton = new JButton("Apply");
+        JButton deleteButton = new JButton("Delete");
+        ActionListener actionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                switch (actionEvent.getActionCommand()) {
+                    case "Apply":
+                        root.studentSelector.getSelected().name = studentNameField.getText();
+                        root.studentSelector.getSelected().subjects = subjectSelector.getSubjects();
+                        break;
+                    case "Delete":
+                        if (JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this student?", "Confirm deletion", JOptionPane.YES_NO_OPTION) == 0) {
+                            Student.students.remove(root.studentSelector.getSelected());
+                        }
+                        break;
+                }
+                root.studentSelector.refresh();
+            }
+        };
+
+        applyButton.addActionListener(actionListener);
+        deleteButton.addActionListener(actionListener);
 
         studentEditorLayout.setAutoCreateGaps(true);
         studentEditorLayout.setHorizontalGroup(
@@ -69,13 +96,15 @@ public class StudentDetails extends JPanel {
                                         .addComponent(applyButton)
                         )
         );
+        add("student", studentEditor);
 
-        this.add("student", studentEditor);
+        JLabel studentNotSelectedLabel = new JLabel("Student not selected.");
+        studentNotSelectedLabel.setAlignmentX(CENTER_ALIGNMENT);
+        JPanel studentNotSelectedWrapper = new JPanel();
+        studentNotSelectedWrapper.setLayout(new BoxLayout(studentNotSelectedWrapper, BoxLayout.PAGE_AXIS));
+        studentNotSelectedWrapper.add(studentNotSelectedLabel);
+        add("none", studentNotSelectedWrapper);
 
-        JPanel notSelected = new JPanel();
-        notSelected.add(new Label("Student not selected"), BorderLayout.CENTER);
-        this.add("none", notSelected);
-        showStudent(null);
     }
 
     public void showStudent(Student student) {
@@ -88,8 +117,6 @@ public class StudentDetails extends JPanel {
         subjectSelector.setSubjects(student.subjects);
         cardLayout.show(this, "student");
     }
-
-
 
 
 }

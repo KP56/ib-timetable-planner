@@ -7,9 +7,9 @@ import java.io.*;
 
 public class StudentsSerializer {
 
-    private StudentsSerializer instance;
+    private static StudentsSerializer instance;
 
-    public StudentsSerializer getInstance() {
+    public static StudentsSerializer getInstance() {
         if (instance == null) {
             instance = new StudentsSerializer();
         }

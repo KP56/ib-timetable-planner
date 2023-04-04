@@ -1,8 +1,10 @@
 package me.kp56.timetables.timetable;
 
+import javax.swing.*;
+import java.io.*;
 import java.util.*;
 
-public class Student {
+public class Student implements Serializable {
     public static List<Student> students = new ArrayList<>();
 
     public Set<Timetable.Subject> subjects = new HashSet<>();
