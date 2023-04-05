@@ -1,6 +1,7 @@
 package me.kp56.timetables.ui.editor;
 
 import me.kp56.timetables.ui.about.HelpMenu;
+import me.kp56.timetables.ui.editor.settings.SettingsEditor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,11 +12,16 @@ public class MenuBar extends JMenuBar {
     private StudentEditor root;
 
 
+
     public MenuBar(StudentEditor root) {
+        setOpaque(true);
+        setBackground(Color.GRAY);
+
         JMenu studentsMenu = new JMenu("Students");
         JMenuItem open = new JMenuItem("Open");
         JMenuItem save = new JMenuItem("Save");
         JMenuItem saveAs = new JMenuItem("Save As");
+
 
         ActionListener actionListener = new ActionListener() {
             @Override
@@ -44,10 +50,13 @@ public class MenuBar extends JMenuBar {
         studentsMenu.add(save);
         studentsMenu.add(saveAs);
 
-
-        setOpaque(true);
-        setBackground(Color.GRAY);
         add(studentsMenu);
+
+        JMenu settingsMenu = new JMenu("Settings");
+        JMenuItem settings = new JMenuItem("Settings");
+        settings.addActionListener((a) -> new SettingsEditor().setVisible(true));
+        settingsMenu.add(settings);
+        add(settingsMenu);
         add(new HelpMenu());
     }
 

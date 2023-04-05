@@ -4,6 +4,11 @@ import java.awt.*;
 
 public final class ScreenSize {
     private static ScreenSize instance;
+
+    public Dimension getDimension() {
+        return dimension;
+    }
+
     private Dimension dimension;
 
     private ScreenSize() {
