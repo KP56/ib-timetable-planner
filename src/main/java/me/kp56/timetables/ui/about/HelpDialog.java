@@ -1,6 +1,7 @@
 package me.kp56.timetables.ui.about;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -10,6 +11,10 @@ public class HelpDialog extends JFrame {
         setTitle(title);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         JTextArea textArea = new JTextArea();
+        Font font = textArea.getFont();
+        float size = font.getSize() + 5.0f;
+        textArea.setFont(font.deriveFont(size));
+
         textArea.setEditable(false);
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resource)) {
             String content = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
