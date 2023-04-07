@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Runner {
+    // @KP56 here u have old main function without logging loop
     private static Config config = Config.getInstance();
     private static File workingDir = new File(System.getProperty("user.dir"));
     // change it to false in order to stop algorithm

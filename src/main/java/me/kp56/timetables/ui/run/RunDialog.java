@@ -55,6 +55,7 @@ public class RunDialog extends JFrame implements ActionListener {
             return;
         }
 
+//        @KP56 here u have the old logging loop instead of printing to stdout just use textArea.append()
         for (AtomicInteger integer : runner.environmentGaps) {
             //Checking if any environment is yet to produce the first generation
             if (integer.get() == -1) {
