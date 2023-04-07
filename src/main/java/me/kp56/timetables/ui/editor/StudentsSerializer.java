@@ -48,6 +48,7 @@ public class StudentsSerializer {
             for (Student student : Student.students) {
                 objectOutputStream.writeObject(student);
             }
+            JOptionPane.showMessageDialog(null, "Students successfully saved to " + fileChooser.getSelectedFile().getName() + ".", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null, "Save file not found", "Failed to save", JOptionPane.ERROR_MESSAGE);
         } catch (IOException e) {

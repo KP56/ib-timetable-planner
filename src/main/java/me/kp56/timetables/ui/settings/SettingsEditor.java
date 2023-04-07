@@ -29,6 +29,8 @@ public class SettingsEditor extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 settingsDetails.apply();
+                dispose();
+                JOptionPane.showMessageDialog(null, "Settings has been updated", "Saved settings", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         leftComponent.add(applyButton);
