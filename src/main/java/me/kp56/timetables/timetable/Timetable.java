@@ -442,8 +442,8 @@ public class Timetable {
                         continueCounter++;
                         continue;
                     }
-                    List<Double> probabilities = Main.normalizeProbabilities(unnormalized);
-                    int current = unnormalizedIndexes.get(Main.randomItem(probabilities));
+                    List<Double> probabilities = Runner.normalizeProbabilities(unnormalized);
+                    int current = unnormalizedIndexes.get(Runner.randomItem(probabilities));
                     Group currentGroup = allGroups.get(current);
                     for (Subject s : currentGroup.subjects) {
                         subjectMap.replace(s, subjectMap.get(s) - 1);
@@ -475,8 +475,8 @@ public class Timetable {
                         if (copy.isEmpty()) {
                             break;
                         }
-                        List<Double> newProbabilities = Main.normalizeProbabilities(copy);
-                        current = indexes.get(Main.randomItem(newProbabilities));
+                        List<Double> newProbabilities = Runner.normalizeProbabilities(copy);
+                        current = indexes.get(Runner.randomItem(newProbabilities));
                         currentGroup = allGroups.get(current);
                         for (Subject s : currentGroup.subjects) {
                             subjectMap.replace(s, subjectMap.get(s) - 1);
