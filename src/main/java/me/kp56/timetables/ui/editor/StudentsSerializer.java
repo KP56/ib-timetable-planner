@@ -3,9 +3,11 @@ package me.kp56.timetables.ui.editor;
 import me.kp56.timetables.timetable.Student;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 
 public class StudentsSerializer {
+    public static final FileNameExtensionFilter extensionsFilter = new FileNameExtensionFilter("Students File", "students");
 
     private static StudentsSerializer instance;
 
@@ -19,10 +21,14 @@ public class StudentsSerializer {
     private JFileChooser fileChooser = new JFileChooser();
 
     private StudentsSerializer() {
+        fileChooser.setFileFilter(extensionsFilter);
     }
 
 
     public void saveAs() {
+        if (fileChooser.getSelectedFile() == null) {
+            fileChooser.setSelectedFile(new File(".students"));
+        }
         int returnVal = fileChooser.showSaveDialog(null);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             save();
