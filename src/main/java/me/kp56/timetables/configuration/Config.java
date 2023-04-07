@@ -27,7 +27,6 @@ public class Config {
     }
 
     private Config() {
-        //just for now
         valueSettings.put("genetic.generation_size", 500);
         valueSettings.put("genetic.environments", -1);
         valueSettings.put("genetic.environment_timeout", 120);
