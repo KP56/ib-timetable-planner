@@ -12,19 +12,19 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Runner {
     private static Config config = Config.getInstance();
     private static File workingDir = new File(System.getProperty("user.dir"));
+    // change it to false in order to stop algorithm
+    public AtomicBoolean keep_running = new AtomicBoolean(true);
 
+    public List<AtomicInteger> environmentGaps = new ArrayList<>();
+    public List<AtomicReference<Double>> fitnessValues = new ArrayList<>();
+    public int environments;
+    public long beginning;
     public Runner() throws InterruptedException {
         System.out.println("Initializing required data structures.");
 	    Timetable.init();
 
-        long beginning = System.currentTimeMillis();
 
-        List<AtomicInteger> environmentGaps = new ArrayList<>();
-        List<AtomicReference<Double>> fitnessValues = new ArrayList<>();
-        // change it to false to stop algorithm
-        AtomicBoolean keep_running = new AtomicBoolean(true);
-
-        int environments = config.getInteger("genetic.environments");
+        environments = config.getInteger("genetic.environments");
         if (environments == -1) {
             environments = Runtime.getRuntime().availableProcessors();
         }
@@ -46,36 +46,38 @@ public class Runner {
             }).start();
         }
 
-        //This is the loop which prints information related to the performance of timetables in different environments.
-        infLoop:
-        while (keep_running.get()) {
-            for (AtomicInteger integer : environmentGaps) {
-                //Checking if any environment is yet to produce the first generation
-                if (integer.get() == -1) {
-                    Thread.sleep(1000);
-                    //If it is, we wait 1 more second and check again
-                    continue infLoop;
-                }
-            }
+        beginning = System.currentTimeMillis();
 
-            System.out.println("Environment performance (" + ((System.currentTimeMillis() - beginning) / 1000) + "s):");
-            for (int i = 0; i < environments; i++) {
-                System.out.println("- Environment #" + (i + 1) + ": " + environmentGaps.get(i) + " Gaps/" + fitnessValues.get(i) + " Fitness");
-            }
-
-            int bestGaps = Integer.MAX_VALUE;
-            double bestFitness = 0;
-            for (AtomicReference<Double> d : fitnessValues) {
-                bestFitness = Math.max(bestFitness, d.get());
-            }
-            for (AtomicInteger i : environmentGaps) {
-                bestGaps = Math.min(bestGaps, i.get());
-            }
-
-            System.out.println("Best performance: " + bestGaps + " Gaps/" + bestFitness + " Fitness");
-            System.out.println();
-            Thread.sleep(1000);
-        }
+//        //This is the loop which prints information related to the performance of timetables in different environments.
+//        infLoop:
+//        while (keep_running.get()) {
+//            for (AtomicInteger integer : environmentGaps) {
+//                //Checking if any environment is yet to produce the first generation
+//                if (integer.get() == -1) {
+//                    Thread.sleep(1000);
+//                    //If it is, we wait 1 more second and check again
+//                    continue infLoop;
+//                }
+//            }
+//
+//            System.out.println("Environment performance (" + ((System.currentTimeMillis() - beginning) / 1000) + "s):");
+//            for (int i = 0; i < environments; i++) {
+//                System.out.println("- Environment #" + (i + 1) + ": " + environmentGaps.get(i) + " Gaps/" + fitnessValues.get(i) + " Fitness");
+//            }
+//
+//            int bestGaps = Integer.MAX_VALUE;
+//            double bestFitness = 0;
+//            for (AtomicReference<Double> d : fitnessValues) {
+//                bestFitness = Math.max(bestFitness, d.get());
+//            }
+//            for (AtomicInteger i : environmentGaps) {
+//                bestGaps = Math.min(bestGaps, i.get());
+//            }
+//
+//            System.out.println("Best performance: " + bestGaps + " Gaps/" + bestFitness + " Fitness");
+//            System.out.println();
+//            Thread.sleep(1000);
+//        }
     }
 
     private static void handleEnvironment(String name, AtomicInteger currentGaps, AtomicReference<Double> currentFitness, AtomicBoolean keep_running) throws IOException {

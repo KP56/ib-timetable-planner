@@ -1,6 +1,7 @@
 package me.kp56.timetables.ui.editor;
 
 import me.kp56.timetables.ui.about.HelpMenu;
+import me.kp56.timetables.ui.run.RunMenu;
 import me.kp56.timetables.ui.settings.SettingsEditor;
 import me.kp56.timetables.ui.settings.SettingsMenu;
 
@@ -55,6 +56,7 @@ public class MenuBar extends JMenuBar {
 
         add(new SettingsMenu());
         add(new HelpMenu());
+        add(new RunMenu());
     }
 
 }

@@ -24,6 +24,10 @@ public final class ScreenSize {
         return instance;
     }
 
+    public Dimension half() {
+        return new Dimension((int) dimension.getWidth() / 2, (int) dimension.getHeight() / 2);
+    }
+
     public int getWidth() {
         return (int) dimension.getWidth();
     }
@@ -31,4 +35,5 @@ public final class ScreenSize {
     public int getHeight() {
         return (int) dimension.getHeight();
     }
+
 }
