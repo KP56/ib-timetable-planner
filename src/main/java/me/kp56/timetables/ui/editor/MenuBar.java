@@ -1,7 +1,8 @@
 package me.kp56.timetables.ui.editor;
 
 import me.kp56.timetables.ui.about.HelpMenu;
-import me.kp56.timetables.ui.editor.settings.SettingsEditor;
+import me.kp56.timetables.ui.settings.SettingsEditor;
+import me.kp56.timetables.ui.settings.SettingsMenu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,11 +53,7 @@ public class MenuBar extends JMenuBar {
 
         add(studentsMenu);
 
-        JMenu settingsMenu = new JMenu("Settings");
-        JMenuItem settings = new JMenuItem("Settings");
-        settings.addActionListener((a) -> new SettingsEditor().setVisible(true));
-        settingsMenu.add(settings);
-        add(settingsMenu);
+        add(new SettingsMenu());
         add(new HelpMenu());
     }
 

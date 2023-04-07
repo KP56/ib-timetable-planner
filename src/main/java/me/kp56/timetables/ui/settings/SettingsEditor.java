@@ -1,4 +1,4 @@
-package me.kp56.timetables.ui.editor.settings;
+package me.kp56.timetables.ui.settings;
 
 import me.kp56.timetables.ui.ScreenSize;
 
