@@ -4,17 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FuzzyLogic {
-    private List<FuzzyContainer> containers = new ArrayList<>();
+    private List<List<FuzzyContainer>> containers = new ArrayList<>();
 
-    public void addContainer(FuzzyContainer container) {
-        containers.add(container);
+    public void addContainer(int group, FuzzyContainer container) {
+        containers.get(group).add(container);
     }
 
-    public double evaluate(List<Double> options) {
+    public void addGroup() {
+        containers.add(new ArrayList<>());
+    }
+
+    private double evaluate(int container, List<Double> options) {
         double evaluation = 0;
         for (int i = 0; i < containers.size(); i++) {
-            evaluation += containers.get(i).evaluate(options.get(i)) / containers.size();
+            evaluation += containers.get(container).get(i).evaluate(options.get(i)) / containers.get(container).size();
         }
+        return evaluation;
+    }
+
+    public double evaluate(List<List<Double>> options) {
+        double evaluation = 0;
+        for (int i = 0; i < containers.size(); i++) {
+            evaluation += evaluate(i, options.get(i)) / containers.size();
+        }
+
         return evaluation;
     }
 }

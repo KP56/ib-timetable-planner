@@ -20,7 +20,7 @@ public class FuzzyContainer {
         }
     }
 
-    public void modifyRecord(int index, int[] distribution) {
+    public void modifyRecord(int index, int... distribution) {
         int sum = 0;
         for (int i : distribution) {
             sum += i;

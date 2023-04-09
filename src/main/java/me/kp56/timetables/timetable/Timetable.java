@@ -2,6 +2,8 @@ package me.kp56.timetables.timetable;
 
 import me.kp56.timetables.Main;
 import me.kp56.timetables.configuration.Config;
+import me.kp56.timetables.fuzzylogic.FuzzyContainer;
+import me.kp56.timetables.fuzzylogic.FuzzyLogic;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -166,9 +168,91 @@ public class Timetable {
     /*Calculates fitness of the timetable. The greater it is, the better the timetable is.
      * I am going to replace this one with a better implementation using fuzzy logic later on.*/
     public double fitness() {
-        int noLessons = gaps();
+        FuzzyLogic logic = new FuzzyLogic();
 
-        return 55 * Student.students.size() - noLessons;
+        //Creating containers for daily evaluation
+        FuzzyContainer startingLessons = new FuzzyContainer(11);
+        startingLessons.modifyRecord(0, 2, 2, 6, 4, 4);
+        startingLessons.modifyRecord(1, 0, 2, 3, 6, 7);
+        startingLessons.modifyRecord(2, 0, 1, 1, 3, 13);
+        startingLessons.modifyRecord(3, 0, 2, 2, 5, 9);
+        startingLessons.modifyRecord(4, 0, 4, 4, 4, 6);
+        startingLessons.modifyRecord(5, 2, 5, 4, 5, 2);
+        startingLessons.modifyRecord(6, 5, 3, 6, 3, 1);
+        startingLessons.modifyRecord(7, 8, 2, 5, 2, 1);
+        startingLessons.modifyRecord(8, 10, 0, 4, 3, 1);
+        startingLessons.modifyRecord(9, 10, 0, 4, 2, 2);
+        startingLessons.modifyRecord(10, 10, 1, 4, 1, 2);
+
+        FuzzyContainer endingLessons = new FuzzyContainer(11);
+        endingLessons.modifyRecord(0, 4, 0, 5, 0, 8);
+        endingLessons.modifyRecord(1, 4, 0, 4, 1, 8);
+        endingLessons.modifyRecord(2, 1, 3, 2, 3, 8);
+        endingLessons.modifyRecord(3, 1, 0, 3, 2, 11);
+        endingLessons.modifyRecord(4, 0, 0, 2, 3, 13);
+        endingLessons.modifyRecord(5, 0, 0, 0, 3, 15);
+        endingLessons.modifyRecord(6, 0, 0, 0, 9, 9);
+        endingLessons.modifyRecord(7, 0, 1, 7, 3, 7);
+        endingLessons.modifyRecord(8, 4, 5, 7, 2, 0);
+        endingLessons.modifyRecord(9, 7, 7, 3, 1, 0);
+        endingLessons.modifyRecord(10, 10, 3, 4, 1, 0);
+
+        FuzzyContainer totalLessons = new FuzzyContainer(11);
+        totalLessons.modifyRecord(0, 2, 2, 5, 3, 6);
+        totalLessons.modifyRecord(1, 1, 3, 3, 4, 7);
+        totalLessons.modifyRecord(2, 1, 1, 3, 1, 12);
+        totalLessons.modifyRecord(3, 1, 0, 0, 3, 14);
+        totalLessons.modifyRecord(4, 0, 0, 0, 4, 14);
+        totalLessons.modifyRecord(5, 0, 0, 0, 5, 13);
+        totalLessons.modifyRecord(6, 0, 1, 3, 7, 7);
+        totalLessons.modifyRecord(7, 1, 2, 8, 6, 1);
+        totalLessons.modifyRecord(8, 5, 9, 4, 0, 0);
+        totalLessons.modifyRecord(9, 11, 6, 1, 0, 0);
+        totalLessons.modifyRecord(10, 14, 3, 1, 0, 0);
+
+        FuzzyContainer totalGaps = new FuzzyContainer(9);
+        totalGaps.modifyRecord(0, 0, 1, 3, 6, 8);
+        totalGaps.modifyRecord(1, 1, 0, 3, 6, 8);
+        totalGaps.modifyRecord(2, 1, 2, 3, 5, 7);
+        totalGaps.modifyRecord(3, 3, 0, 7, 4, 4);
+        totalGaps.modifyRecord(4, 3, 8, 2, 3, 2);
+        totalGaps.modifyRecord(5, 7, 4, 4, 2, 1);
+        totalGaps.modifyRecord(6, 9, 5, 1, 3, 0);
+        totalGaps.modifyRecord(7, 11, 3, 4, 0, 0);
+        totalGaps.modifyRecord(8, 11, 4, 3, 0, 0);
+
+        //We will be taking average of all gaps in a row in a day
+        FuzzyContainer gapsInARow = new FuzzyContainer(9);
+        gapsInARow.modifyRecord(0, 0, 1, 8, 6, 3);
+        gapsInARow.modifyRecord(1, 1, 1, 2, 8, 6);
+        gapsInARow.modifyRecord(2, 1, 2, 5, 4, 6);
+        gapsInARow.modifyRecord(3, 2, 3, 4, 3, 6);
+        gapsInARow.modifyRecord(4, 7, 4, 1, 4, 2);
+        gapsInARow.modifyRecord(5, 6, 3, 3, 4, 1);
+        gapsInARow.modifyRecord(6, 8, 4, 2, 2, 1);
+        gapsInARow.modifyRecord(7, 9, 1, 2, 4, 1);
+        gapsInARow.modifyRecord(8, 8, 1, 2, 4, 1);
+
+        //Weekly container
+        FuzzyContainer weeklyGaps = new FuzzyContainer(16);
+        weeklyGaps.modifyRecord(0, 1, 1, 2, 5, 4);
+        weeklyGaps.modifyRecord(1, 0, 5, 0, 3, 5);
+        weeklyGaps.modifyRecord(2, 0, 3, 2, 2, 6);
+        weeklyGaps.modifyRecord(3, 0, 1, 1, 6, 5);
+        weeklyGaps.modifyRecord(4, 0, 0, 2, 2, 9);
+        weeklyGaps.modifyRecord(5, 0, 0, 3, 3, 7);
+        weeklyGaps.modifyRecord(6, 0, 1, 2, 6, 4);
+        weeklyGaps.modifyRecord(7, 0, 2, 4, 3, 4);
+        weeklyGaps.modifyRecord(8, 2, 0, 7, 2, 2);
+        weeklyGaps.modifyRecord(9, 2, 1, 7, 1, 2);
+        weeklyGaps.modifyRecord(10, 2, 5, 3, 1, 2);
+        weeklyGaps.modifyRecord(11, 4, 6, 0, 1, 2);
+        weeklyGaps.modifyRecord(12, 6, 4, 0, 1, 2);
+        weeklyGaps.modifyRecord(13, 10, 0, 0, 2, 1);
+        weeklyGaps.modifyRecord(14, 10, 0, 0, 3, 0);
+        weeklyGaps.modifyRecord(15, 10, 0, 0, 3, 0);
+
+
     }
 
     //Computes the total number of gaps which students have

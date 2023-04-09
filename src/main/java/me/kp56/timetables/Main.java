@@ -17,7 +17,7 @@ public class Main {
     private static Config config = Config.getInstance();
     private static File workingDir = new File(System.getProperty("user.dir"));
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         UI ui = new UI();
     }
 }
