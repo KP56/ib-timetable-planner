@@ -21,9 +21,7 @@ public class Runner {
     public int environments;
     public long beginning;
     public Runner() throws InterruptedException {
-        System.out.println("Initializing required data structures.");
 	    Timetable.init();
-
 
         environments = config.getInteger("genetic.environments");
         if (environments == -1) {
@@ -81,7 +79,7 @@ public class Runner {
 //        }
     }
 
-    private static void handleEnvironment(String name, AtomicInteger currentGaps, AtomicReference<Double> currentFitness, AtomicBoolean keep_running) throws IOException {
+    private static void handleEnvironment(String name, AtomicInteger currentGaps, AtomicReference<Double> currentFitness, AtomicBoolean keepRunning) throws IOException {
         File environmentDir = new File(name);
 
         if (!environmentDir.exists()) {
@@ -116,7 +114,7 @@ public class Runner {
 
         double bestFitnessAfterReset = 0;
         //An infinite loop in which we create new generations and evaluate the current one
-        for (int i = 0; keep_running.get(); i++) {
+        for (int i = 0; keepRunning.get(); i++) {
             double maximalFitness = 0;
             Timetable best = null;
             int bestGaps = 0;

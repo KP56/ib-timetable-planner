@@ -27,7 +27,7 @@ public class Config {
     }
 
     private Config() {
-        valueSettings.put("genetic.generation_size", 500);
+        valueSettings.put("genetic.generation_size", 50);
         valueSettings.put("genetic.environments", -1);
         valueSettings.put("genetic.environment_timeout", 120);
         valueSettings.put("genetic.fix_tries", 5);
@@ -36,6 +36,8 @@ public class Config {
         valueSettings.put("maximum_daily_lessons", 11);
 
         valueSettings.put("keep_track_of", 5);
+
+        booleanSettings.put("fuzzylogic.enabled", false); //Need to create one more form with a question related to groups of gaps in order for it to be better
 
         booleanSettings.put("history.connected", true);
         booleanSettings.put("math_aa.connected", false);

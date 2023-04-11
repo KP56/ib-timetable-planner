@@ -1,6 +1,7 @@
 package me.kp56.timetables.ui.run;
 
 import me.kp56.timetables.timetable.Runner;
+import me.kp56.timetables.timetable.Timetable;
 import me.kp56.timetables.ui.ScreenSize;
 
 import javax.swing.*;
@@ -78,7 +79,6 @@ public class RunDialog extends JFrame implements ActionListener {
         }
 
         textArea.append("Best performance: " + bestGaps + " Gaps/" + bestFitness + " Fitness\n");
-
     }
 
 }

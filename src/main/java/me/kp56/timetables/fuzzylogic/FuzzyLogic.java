@@ -16,7 +16,7 @@ public class FuzzyLogic {
 
     private double evaluate(int container, List<Double> options) {
         double evaluation = 0;
-        for (int i = 0; i < containers.size(); i++) {
+        for (int i = 0; i < containers.get(container).size(); i++) {
             evaluation += containers.get(container).get(i).evaluate(options.get(i)) / containers.get(container).size();
         }
         return evaluation;
