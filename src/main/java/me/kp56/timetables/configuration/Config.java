@@ -37,7 +37,7 @@ public class Config {
 
         valueSettings.put("keep_track_of", 5);
 
-        booleanSettings.put("fuzzylogic.enabled", false); //Need to create one more form with a question related to groups of gaps in order for it to be better
+        booleanSettings.put("fuzzylogic.enabled", true); //Need to create one more form with a question related to groups of gaps in order for it to be better
 
         booleanSettings.put("history.connected", true);
         booleanSettings.put("math_aa.connected", false);

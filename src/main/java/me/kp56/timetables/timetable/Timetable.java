@@ -287,6 +287,8 @@ public class Timetable {
                         }
                     }
 
+                    int gapGroups = gapsInARowList.size();
+
                     //TODO: figure out what to do with days without lessons
                     if (end < start) {
                         //A day without lessons
@@ -321,7 +323,7 @@ public class Timetable {
                         dailyLogic.addContainer(1, gapsInARow);
                     }
 
-                    studentEvaluation += dailyLogic.evaluate(parameters) / 5d;
+                    studentEvaluation += (dailyLogic.evaluate(parameters) + gapGroups / 5d) / 5d;
                 }
                 studentEvaluation += weeklyGaps.evaluate(Math.min(15, weeklyGapsCount));
                 totalEvaluation += studentEvaluation / Student.students.size();
