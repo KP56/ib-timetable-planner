@@ -15,7 +15,7 @@ public class BooleanSettingDetail extends JPanel {
     }
 
     public Boolean getValue() {
-        return checkBox.isEnabled();
+        return checkBox.isSelected();
     }
     public void setValue(Boolean value){ checkBox.setSelected(value); }
 }
