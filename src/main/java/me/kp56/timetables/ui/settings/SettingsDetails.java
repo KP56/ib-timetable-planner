@@ -44,6 +44,7 @@ public class SettingsDetails extends JPanel {
         for (Map.Entry<String, BooleanSettingDetail> setting: booleanSettings.entrySet()) {
             Config.getInstance().set(setting.getKey(), setting.getValue().getValue());
         }
+        Config.getInstance().save();
     }
 
     public void refresh() {

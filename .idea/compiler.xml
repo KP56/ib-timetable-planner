@@ -7,12 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="timetable-generator" />
-        <module name="ib timetables" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="ib timetables" target="17" />
-      <module name="ib-timetable-planner" target="17" />
-    </bytecodeTargetLevel>
   </component>
 </project>

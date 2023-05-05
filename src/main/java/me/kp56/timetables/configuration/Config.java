@@ -1,5 +1,8 @@
 package me.kp56.timetables.configuration;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +40,7 @@ public class Config {
 
         valueSettings.put("keep_track_of", 5);
 
-        booleanSettings.put("fuzzylogic.enabled", true); //Need to create one more form with a question related to groups of gaps in order for it to be better
+        valueSettings.put("fuzzylogic.rate", 50); //TODO: Need to create one more form with a question related to groups of gaps in order for it to be better
 
         booleanSettings.put("history.connected", true);
         booleanSettings.put("math_aa.connected", false);
@@ -85,6 +88,8 @@ public class Config {
         booleanSettings.put("tok.disabled", false);
         booleanSettings.put("z_wych.disabled", false);
         booleanSettings.put("polish_no_examination.disabled", false);
+
+        load();
     }
 
     public Boolean getBoolean(String id) {
@@ -97,7 +102,29 @@ public class Config {
     }
     public void set(String id, Integer value) { valueSettings.put(id, value); }
 
+    public void save() {
+        try {
+            FileOutputStream fos = new FileOutputStream("settings");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(valueSettings);
+            oos.writeObject(booleanSettings);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    public void load() {
+        if (Files.exists(Path.of("settings"))) {
+            try {
+                FileInputStream fos = new FileInputStream("settings");
+                ObjectInputStream oos = new ObjectInputStream(fos);
+                valueSettings = (Map<String, Integer>) oos.readObject();
+                booleanSettings = (Map<String, Boolean>) oos.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
     public boolean isInteger(String id) {
         if (valueSettings.containsKey(id)) {
