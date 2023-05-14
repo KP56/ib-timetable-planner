@@ -2,9 +2,10 @@ package me.kp56.timetables.timetable;
 
 import me.kp56.timetables.configuration.Config;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Group {
+public class Group implements Serializable {
     private static final Config config = Config.getInstance();
 
     public Set<Timetable.Subject> subjects;

@@ -17,7 +17,7 @@ public class RunDialog extends JFrame implements ActionListener {
     private JTextArea textArea = new JTextArea(100, 20);
     private Timer loggingTimer;
     private JButton stopButton;
-    public RunDialog() throws InterruptedException {
+    public RunDialog(String studentClass) throws InterruptedException {
         setName("Run");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(ScreenSize.getInstance().half());
@@ -27,22 +27,18 @@ public class RunDialog extends JFrame implements ActionListener {
         contentPane.add(new JScrollPane(textArea));
         JButton stopButton = new JButton("Stop");
         stopButton.setAlignmentX(CENTER_ALIGNMENT);
-        stopButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (!runner.keep_running.get()) {
-                    JFrame root = (JFrame) SwingUtilities.getRoot((Component) actionEvent.getSource());
-                    root.dispatchEvent(new WindowEvent(root, WindowEvent.WINDOW_CLOSING));
-                }
-                runner.keep_running.set(false);
+        stopButton.addActionListener(actionEvent -> {
+            if (!runner.keep_running.get()) {
+                JFrame root = (JFrame) SwingUtilities.getRoot((Component) actionEvent.getSource());
+                root.dispatchEvent(new WindowEvent(root, WindowEvent.WINDOW_CLOSING));
             }
+            runner.keep_running.set(false);
         });
         contentPane.add(stopButton);
         setVisible(true);
-        runner = new Runner();
+        runner = new Runner(studentClass);
         loggingTimer = new Timer(1000, this);
         loggingTimer.start();
-
     }
 
 
@@ -71,11 +67,13 @@ public class RunDialog extends JFrame implements ActionListener {
 
         int bestGaps = Integer.MAX_VALUE;
         double bestFitness = 0;
-        for (AtomicReference<Double> d : runner.fitnessValues) {
-            bestFitness = Math.max(bestFitness, d.get());
-        }
-        for (AtomicInteger i : runner.environmentGaps) {
-            bestGaps = Math.min(bestGaps, i.get());
+        for (int i = 0; i < runner.environments; i++) {
+            double fitness = runner.fitnessValues.get(i).get();
+            int gaps = runner.environmentGaps.get(i).get();
+            if (fitness > bestFitness) {
+                bestFitness = fitness;
+                bestGaps = gaps;
+            }
         }
 
         textArea.append("Best performance: " + bestGaps + " Gaps/" + bestFitness + " Fitness\n");

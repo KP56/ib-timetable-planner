@@ -40,7 +40,7 @@ public class Config {
 
         valueSettings.put("keep_track_of", 5);
 
-        valueSettings.put("fuzzylogic.rate", 50); //TODO: Need to create one more form with a question related to groups of gaps in order for it to be better
+        valueSettings.put("fuzzylogic.rate", 50);
 
         booleanSettings.put("history.connected", true);
         booleanSettings.put("math_aa.connected", false);

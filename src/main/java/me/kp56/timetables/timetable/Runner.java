@@ -20,13 +20,22 @@ public class Runner {
     public List<AtomicReference<Double>> fitnessValues = new ArrayList<>();
     public int environments;
     public long beginning;
-    public Runner() throws InterruptedException {
+    public Runner(String studentClass) throws InterruptedException {
+        System.out.println("Generating required data structures. The program may hang for a bit.");
+        long timestamp = System.currentTimeMillis();
 	    Timetable.init();
+        System.out.println("FINISHED! Took: " + ((double) (System.currentTimeMillis() - timestamp) / 1000d) + " seconds.");
 
         environments = config.getInteger("genetic.environments");
         if (environments == -1) {
             environments = Runtime.getRuntime().availableProcessors();
         }
+
+        File classDir = new File("runs/" + studentClass);
+        if (!classDir.exists()) {
+            classDir.mkdirs();
+        }
+        int id = classDir.listFiles().length + 1;
 
         /*Creating environments in which the modified version of genetic algorithm will
         * keep creating new generations. Each thread handles a separate environment.*/
@@ -38,7 +47,7 @@ public class Runner {
             //Starting a new thread and calling handleEnvironment
             new Thread(() -> {
                 try {
-                    handleEnvironment("environment" + (finalI + 1), environmentGaps.get(finalI), fitnessValues.get(finalI), keep_running);
+                    handleEnvironment("runs/" + studentClass + "/" + id + "/environment" + (finalI + 1), environmentGaps.get(finalI), fitnessValues.get(finalI), keep_running);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -83,7 +92,7 @@ public class Runner {
         File environmentDir = new File(name);
 
         if (!environmentDir.exists()) {
-            environmentDir.mkdir();
+            environmentDir.mkdirs();
         }
 
         //Deleting all files related to previously generated timetables in this specific environment during a previous runtime
@@ -218,7 +227,7 @@ public class Runner {
         int counter = 1;
         for (Map.Entry<Double, List<Timetable>> entry2 : optimal.entrySet()) {
             for (Timetable t : entry2.getValue()) {
-                t.saveToFile(dir.getName() + "/candidate_timetable" + counter, t.gaps(), t.fitness());
+                t.saveToFile(dir.getPath() + "/candidate_timetable" + counter, t.gaps(), t.fitness());
                 counter++;
             }
         }
