@@ -49,7 +49,7 @@ public class Group implements Serializable {
     //A recursive implementation of generating all possible groups of subjects
     private static void recursiveGen(Group current, Set<Group> groups) {
         for (Subject subject : Subject.values()) {
-            if (!config.getBoolean(subject.name().toLowerCase(Locale.ROOT) + ".disabled")) {
+            if (!subject.disabled()) {
                 if (!current.subjects.contains(subject)) {
                     Set<Subject> subjects = (Set<Subject>) ((HashSet<Subject>) current.subjects).clone();
                     subjects.add(subject);

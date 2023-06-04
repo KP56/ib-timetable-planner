@@ -5,7 +5,6 @@ import me.kp56.timetables.timetable.Subject;
 import javax.swing.*;
 import java.util.*;
 
-// TODO scan Config for disabled subjects
 public class SubjectSelector extends JPanel {
     private Map<Subject, JCheckBox> buttons;
 

@@ -126,7 +126,7 @@ public class FixerCache {
 
         //For each subject, prepare the initial map with the number of possible uses being equal to the limit of each enabled subject
         for (Subject s : Subject.values()) {
-            if (!config.getBoolean(s.name().toLowerCase(Locale.ROOT) + ".disabled")) {
+            if (!s.disabled()) {
                 subjectMap.put(s, s.limit);
             }
         }

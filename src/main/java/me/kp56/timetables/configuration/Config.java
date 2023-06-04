@@ -38,7 +38,7 @@ public class Config {
         valueSettings.put("maximum_daily_subjects", 2);
         valueSettings.put("maximum_daily_lessons", 11);
 
-        valueSettings.put("keep_track_of", 5);
+        valueSettings.put("keep_track_of", 10);
 
         valueSettings.put("fuzzylogic.rate", 50);
 
@@ -55,39 +55,6 @@ public class Config {
         booleanSettings.put("computer_science.connected", true);
         booleanSettings.put("french_b.connected", false);
         booleanSettings.put("geography.connected", false);
-
-        booleanSettings.put("history_hl.disabled", false);
-        booleanSettings.put("history_sl.disabled", false);
-        booleanSettings.put("math_aa_hl.disabled", false);
-        booleanSettings.put("math_aa_sl.disabled", false);
-        booleanSettings.put("math_ai_sl.disabled", false);
-        booleanSettings.put("economics_hl.disabled", false);
-        booleanSettings.put("economics_sl.disabled", false);
-        booleanSettings.put("polish_a_hl.disabled", false);
-        booleanSettings.put("polish_a_sl.disabled", false);
-        booleanSettings.put("english_b_hl.disabled", false);
-        booleanSettings.put("english_a_hl.disabled", false);
-        booleanSettings.put("english_a_sl.disabled", false);
-        booleanSettings.put("german_b_hl.disabled", false);
-        booleanSettings.put("german_b_sl.disabled", true);
-        booleanSettings.put("spanish_b_hl.disabled", false);
-        booleanSettings.put("spanish_b_sl.disabled", true);
-        booleanSettings.put("biology_hl.disabled", false);
-        booleanSettings.put("biology_sl.disabled", false);
-        booleanSettings.put("chemistry_hl.disabled", false);
-        booleanSettings.put("chemistry_sl.disabled", false);
-        booleanSettings.put("physics_hl.disabled", false);
-        booleanSettings.put("physics_sl.disabled", true);
-        booleanSettings.put("computer_science_hl.disabled", false);
-        booleanSettings.put("computer_science_sl.disabled", false);
-        booleanSettings.put("french_b_sl.disabled", false);
-        booleanSettings.put("french_b_hl.disabled", true);
-        booleanSettings.put("geography_sl.disabled", true);
-        booleanSettings.put("geography_hl.disabled", false);
-        booleanSettings.put("dsd.disabled", false);
-        booleanSettings.put("tok.disabled", false);
-        booleanSettings.put("z_wych.disabled", false);
-        booleanSettings.put("polish_no_examination.disabled", false);
 
         load();
     }

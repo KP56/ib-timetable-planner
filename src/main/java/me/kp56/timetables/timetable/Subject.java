@@ -51,4 +51,14 @@ public enum Subject {
         this.limit = limit;
         this.connectedTo = new ArrayList<>();
     }
+
+    public boolean disabled() {
+        for (Student s : Student.students) {
+            if (s.subjects.contains(this)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
