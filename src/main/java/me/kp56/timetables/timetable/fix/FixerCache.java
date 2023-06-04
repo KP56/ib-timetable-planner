@@ -1,10 +1,7 @@
 package me.kp56.timetables.timetable.fix;
 
 import me.kp56.timetables.configuration.Config;
-import me.kp56.timetables.timetable.Group;
-import me.kp56.timetables.timetable.Runner;
-import me.kp56.timetables.timetable.Student;
-import me.kp56.timetables.timetable.Timetable;
+import me.kp56.timetables.timetable.*;
 
 import java.util.*;
 
@@ -125,10 +122,10 @@ public class FixerCache {
         }
 
         //Creating a map containing information about the number of subjects left which we can use
-        Map<Timetable.Subject, Integer> subjectMap = new HashMap<>();
+        Map<Subject, Integer> subjectMap = new HashMap<>();
 
         //For each subject, prepare the initial map with the number of possible uses being equal to the limit of each enabled subject
-        for (Timetable.Subject s : Timetable.Subject.values()) {
+        for (Subject s : Subject.values()) {
             if (!config.getBoolean(s.name().toLowerCase(Locale.ROOT) + ".disabled")) {
                 subjectMap.put(s, s.limit);
             }
@@ -137,7 +134,7 @@ public class FixerCache {
         //Count the number of each subject in the current timetable and for each remove 1 from the number of usages left
         for (List<Group> groups : timetable.days) {
             for (Group g : groups) {
-                for (Timetable.Subject s : g.subjects) {
+                for (Subject s : g.subjects) {
                     subjectMap.replace(s, subjectMap.get(s) - 1);
                     if (subjectMap.get(s) == 0) {
                         subjectMap.remove(s);
@@ -151,9 +148,9 @@ public class FixerCache {
             Collections.shuffle(daysToCheck);
             int continueCounter = 0;
             for (int day : daysToCheck) {
-                Map<Timetable.Subject, Integer> dailyMap = new HashMap<>();
+                Map<Subject, Integer> dailyMap = new HashMap<>();
                 for (Group g : timetable.days[day]) {
-                    for (Timetable.Subject s : g.subjects) {
+                    for (Subject s : g.subjects) {
                         if (dailyMap.containsKey(s)) {
                             dailyMap.replace(s, dailyMap.get(s) + 1);
                         } else {
@@ -230,7 +227,7 @@ public class FixerCache {
         studentLoop:
         for (Student student : Student.students) {
             for (List<Group> groups : timetable.days) {
-                for (Timetable.Subject subject : student.subjects) {
+                for (Subject subject : student.subjects) {
                     for (Group g : groups) {
                         if (g.subjects.contains(subject)) {
                             continue studentLoop;
@@ -248,8 +245,8 @@ public class FixerCache {
         return true;
     }
 
-    private static boolean canAddGroup(Group currentGroup, Map<Timetable.Subject, Integer> subjectMap, Map<Timetable.Subject, Integer> dailyMap) {
-        for (Timetable.Subject s : currentGroup.subjects) {
+    private static boolean canAddGroup(Group currentGroup, Map<Subject, Integer> subjectMap, Map<Subject, Integer> dailyMap) {
+        for (Subject s : currentGroup.subjects) {
             if (!subjectMap.containsKey(s) || (dailyMap.containsKey(s) && dailyMap.get(s) == config.getInteger("maximum_daily_subjects"))) {
                 return false;
             }
@@ -258,8 +255,8 @@ public class FixerCache {
         return true;
     }
 
-    private static void updateMaps(Group currentGroup, Map<Timetable.Subject, Integer> subjectMap, Map<Timetable.Subject, Integer> dailyMap) {
-        for (Timetable.Subject s : currentGroup.subjects) {
+    private static void updateMaps(Group currentGroup, Map<Subject, Integer> subjectMap, Map<Subject, Integer> dailyMap) {
+        for (Subject s : currentGroup.subjects) {
             subjectMap.replace(s, subjectMap.get(s) - 1);
             if (!dailyMap.containsKey(s)) {
                 dailyMap.put(s, 1);

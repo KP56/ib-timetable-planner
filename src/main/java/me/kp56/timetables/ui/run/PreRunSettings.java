@@ -8,6 +8,8 @@ import java.awt.event.WindowEvent;
 
 public class PreRunSettings extends JFrame {
     public PreRunSettings() {
+        super("Provide class name");
+
         setName("Provide class name");
         setSize(new Dimension(ScreenSize.getInstance().getWidth() / 8, ScreenSize.getInstance().getHeight() / 8));
         setLocationRelativeTo(null);

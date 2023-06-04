@@ -8,13 +8,13 @@ import java.util.*;
 public class Group implements Serializable {
     private static final Config config = Config.getInstance();
 
-    public Set<Timetable.Subject> subjects;
+    public Set<Subject> subjects;
     public Set<Student> students = new HashSet<>();
 
-    public Group(Set<Timetable.Subject> subjects) {
+    public Group(Set<Subject> subjects) {
         this.subjects = subjects;
         for (Student student : Student.students) {
-            for (Timetable.Subject subject : subjects) {
+            for (Subject subject : subjects) {
                 if (student.subjects.contains(subject)) {
                     if (!students.add(student)) {
                         throw new RuntimeException("Tried to create an invalid group");
@@ -38,7 +38,7 @@ public class Group implements Serializable {
     }
 
     //Try to generate a group
-    public static Group attempt(Set<Timetable.Subject> subjects) {
+    public static Group attempt(Set<Subject> subjects) {
         try {
             return new Group(subjects);
         } catch (RuntimeException e) {
@@ -48,10 +48,10 @@ public class Group implements Serializable {
 
     //A recursive implementation of generating all possible groups of subjects
     private static void recursiveGen(Group current, Set<Group> groups) {
-        for (Timetable.Subject subject : Timetable.Subject.values()) {
+        for (Subject subject : Subject.values()) {
             if (!config.getBoolean(subject.name().toLowerCase(Locale.ROOT) + ".disabled")) {
                 if (!current.subjects.contains(subject)) {
-                    Set<Timetable.Subject> subjects = (Set<Timetable.Subject>) ((HashSet<Timetable.Subject>) current.subjects).clone();
+                    Set<Subject> subjects = (Set<Subject>) ((HashSet<Subject>) current.subjects).clone();
                     subjects.add(subject);
                     Group newGroup = Group.attempt(subjects);
 

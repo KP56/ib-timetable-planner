@@ -15,13 +15,13 @@ import java.util.stream.Stream;
 public class Combiner {
     private List<Timetable> class1Timetables;
     private List<Timetable> class2Timetables;
-    private Map<Timetable.Subject, String> teachers1;
-    private Map<Timetable.Subject, String> teachers2;
+    private Map<Subject, String> teachers1;
+    private Map<Subject, String> teachers2;
 
     private Timetable res1;
     private Timetable res2;
 
-    public Combiner(String class1, String class2, Map<Timetable.Subject, String> teachers1, Map<Timetable.Subject, String> teachers2) throws IOException {
+    public Combiner(String class1, String class2, Map<Subject, String> teachers1, Map<Subject, String> teachers2) throws IOException {
         this.teachers1 = teachers1;
         this.teachers2 = teachers2;
 
@@ -34,10 +34,12 @@ public class Combiner {
         try (Stream<Path> stream = Files.walk(Paths.get(pathStr))) {
             stream.filter(Files::isRegularFile)
                     .forEach((path -> {
-                        if (path.endsWith(".timetable")) {
+                        if (path.toString().endsWith(".timetable")) {
                             try {
                                 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path.toFile()));
-                                timetables.add((Timetable) ois.readObject());
+                                Timetable timetable = (Timetable) ois.readObject();
+                                timetable.source = path.toString();
+                                timetables.add(timetable);
                             } catch (IOException | ClassNotFoundException e) {
                                 throw new RuntimeException(e);
                             }
@@ -56,8 +58,8 @@ public class Combiner {
         return res2;
     }
 
-    private List<String> extractTeachers(int day, int i, Timetable timetable, Map<Timetable.Subject, String> teachers) {
-        return timetable.days[day].get(i).subjects.stream().map(teachers::get).toList();
+    private List<String> extractTeachers(int day, int i, Timetable timetable, Map<Subject, String> teachers) {
+        return new ArrayList<>(timetable.days[day].get(i).subjects.stream().map(teachers::get).filter(el -> el != null && !el.isEmpty()).toList());
     }
 
     private boolean canCoexist(Timetable timetable1, Timetable timetable2) {

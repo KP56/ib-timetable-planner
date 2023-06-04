@@ -25,13 +25,10 @@ public class SettingsEditor extends JFrame {
         leftComponent.setPreferredSize(new Dimension(ScreenSize.getInstance().getWidth() / 5, ScreenSize.getInstance().getHeight()));
         JButton applyButton = new JButton("Save");
         applyButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        applyButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                settingsDetails.apply();
-                dispose();
-                JOptionPane.showMessageDialog(null, "Settings has been updated", "Saved settings", JOptionPane.INFORMATION_MESSAGE);
-            }
+        applyButton.addActionListener(actionEvent -> {
+            settingsDetails.apply();
+            dispose();
+            JOptionPane.showMessageDialog(null, "Settings have been updated", "Saved settings", JOptionPane.INFORMATION_MESSAGE);
         });
         leftComponent.add(applyButton);
         splitPane.setLeftComponent(leftComponent);

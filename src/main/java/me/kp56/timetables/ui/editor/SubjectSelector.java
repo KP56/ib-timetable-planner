@@ -1,23 +1,18 @@
 package me.kp56.timetables.ui.editor;
 
-import me.kp56.timetables.timetable.Timetable;
+import me.kp56.timetables.timetable.Subject;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Time;
 import java.util.*;
-import java.util.List;
 
 // TODO scan Config for disabled subjects
 public class SubjectSelector extends JPanel {
-    private Map<Timetable.Subject, JCheckBox> buttons;
+    private Map<Subject, JCheckBox> buttons;
 
     public SubjectSelector() {
         buttons = new HashMap();
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        for (Timetable.Subject subject : Timetable.Subject.values()) {
+        for (Subject subject : Subject.values()) {
             JCheckBox button = new JCheckBox(subject.toString().replace('_' , ' '));
             this.add(button);
             button.setVisible(true);
@@ -27,9 +22,9 @@ public class SubjectSelector extends JPanel {
 
 
 //    get list of selected items
-    public Set<Timetable.Subject> getSubjects() {
-        HashSet<Timetable.Subject> selected = new HashSet<>();
-        for (Map.Entry<Timetable.Subject, JCheckBox> entry : buttons.entrySet()) {
+    public Set<Subject> getSubjects() {
+        HashSet<Subject> selected = new HashSet<>();
+        for (Map.Entry<Subject, JCheckBox> entry : buttons.entrySet()) {
             if (entry.getValue().isSelected()) {
                 selected.add(entry.getKey());
             }
@@ -37,8 +32,8 @@ public class SubjectSelector extends JPanel {
         return selected;
     }
 
-    public void setSubjects(Set<Timetable.Subject> subjects) {
-        for (Map.Entry<Timetable.Subject, JCheckBox> entry : buttons.entrySet()) {
+    public void setSubjects(Set<Subject> subjects) {
+        for (Map.Entry<Subject, JCheckBox> entry : buttons.entrySet()) {
             entry.getValue().setSelected(subjects.contains(entry.getKey()));
         }
     }

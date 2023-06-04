@@ -1,22 +1,21 @@
 package me.kp56.timetables.timetable;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
 public class Student implements Serializable {
     public static List<Student> students = new ArrayList<>();
 
-    public Set<Timetable.Subject> subjects = new HashSet<>();
+    public Set<Subject> subjects = new HashSet<>();
     public String name;
 
     public Student(String name) {
         this.name = name;
     }
 
-    public Student(String name, Collection<Timetable.Subject> subjects) {
+    public Student(String name, Collection<Subject> subjects) {
         this.name = name;
-        for (Timetable.Subject subject : subjects) {
+        for (Subject subject : subjects) {
             this.subjects.add(subject);
             this.subjects.addAll(subject.connectedTo);
         }

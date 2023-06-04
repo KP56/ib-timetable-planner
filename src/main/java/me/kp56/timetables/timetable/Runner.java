@@ -20,7 +20,7 @@ public class Runner {
     public List<AtomicReference<Double>> fitnessValues = new ArrayList<>();
     public int environments;
     public long beginning;
-    public Runner(String studentClass) throws InterruptedException {
+    public Runner(String studentClass) {
         System.out.println("Generating required data structures. The program may hang for a bit.");
         long timestamp = System.currentTimeMillis();
 	    Timetable.init();

@@ -11,13 +11,7 @@ public class SettingsList extends JList<String> {
     public SettingsList(SettingsEditor root) {
         this.root = root;
         setVisibleRowCount(-1);
-        addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                root.settingsDetails.show(getSelectedValue());
-            }
-        });
-
+        addListSelectionListener(listSelectionEvent -> root.settingsDetails.show(getSelectedValue()));
 
         DefaultListModel<String> listModel = new DefaultListModel<>();
         setModel(listModel);
@@ -27,8 +21,5 @@ public class SettingsList extends JList<String> {
         for (String name: Config.getInstance().getBooleanSettings().keySet()) {
             listModel.addElement(name);
         }
-
-
-
     }
 }
