@@ -8,8 +8,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,9 +29,35 @@ public class CombinerSettings extends JFrame {
 
         String[] columnNames = {"Subjects", class1, class2};
         Object[][] data = new Object[Subject.values().length][3];
+
+        Map<Subject, String> map1 = new HashMap<>();
+        Map<Subject, String> map2 = new HashMap<>();
+
+        if (Files.exists(Path.of("teachers_" + class1 + ".teachers"))) {
+            try {
+                FileInputStream fis = new FileInputStream("teachers_" + class1 + ".teachers");
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                map1 = (Map<Subject, String>) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if (Files.exists(Path.of("teachers_" + class2 + ".teachers"))) {
+            try {
+                FileInputStream fis = new FileInputStream("teachers_" + class2 + ".teachers");
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                map2 = (Map<Subject, String>) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         for (int i = 0; i < Subject.values().length; i++) {
             data[i][0] = Subject.values()[i];
             data[i][1] = data[i][2] = "";
+            if (map1.containsKey(data[i][0])) data[i][1] = map1.get(data[i][0]);
+            if (map2.containsKey(data[i][0])) data[i][2] = map2.get(data[i][0]);
         }
 
         JTable table = new JTable();
@@ -63,11 +88,24 @@ public class CombinerSettings extends JFrame {
             }
 
             try {
+                FileOutputStream fos = new FileOutputStream("teachers_" + class1 + ".teachers");
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(teachers1);
+
+                FileOutputStream fos2 = new FileOutputStream("teachers_" + class2 + ".teachers");
+                ObjectOutputStream oos2 = new ObjectOutputStream(fos2);
+                oos2.writeObject(teachers2);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            try {
                 Combiner combiner = new Combiner(class1, class2, teachers1, teachers2);
                 combiner.combine();
                 if (combiner.getFirst() == null || combiner.getSecond() == null) {
                     JOptionPane.showMessageDialog(new JFrame(), "Could not find 2 timetables from both classes capable of coexisting.",
                             "Could not combine the timetables", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
 
                 File combinerDir = new File("combined");

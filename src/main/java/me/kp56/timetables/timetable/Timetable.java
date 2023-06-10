@@ -3,6 +3,7 @@ package me.kp56.timetables.timetable;
 import me.kp56.timetables.configuration.Config;
 import me.kp56.timetables.fuzzylogic.FuzzyContainer;
 import me.kp56.timetables.fuzzylogic.FuzzyLogic;
+import me.kp56.timetables.pdf.TimetableToPDFConverter;
 import me.kp56.timetables.timetable.fix.FixerCache;
 
 import java.io.*;
@@ -90,51 +91,12 @@ public class Timetable implements Serializable {
         writer.write("Worst student lesson end: " + (worstEnd + 1));
         writer.close();
 
-        //Writing the timetable to timetable.txt
-        BufferedWriter timetableWriter = new BufferedWriter(new FileWriter(file + "/timetable.txt"));
-        timetableWriter.newLine();
-        timetableWriter.write("Timetable");
-        timetableWriter.newLine();
-        List<String> days = List.of("Monday", "Tuesday", "Wednesday", "Thursday", "Friday");
-        for (int i = 0; i < 5; i++) {
-            timetableWriter.write((i + 1) + ". " + days.get(i) + ":");
-            timetableWriter.newLine();
-            for (Group g : this.days[i]) {
-                timetableWriter.write("- ");
-                List<Subject> subjects = new ArrayList<>(g.subjects);
-                timetableWriter.write(subjects.get(0).name());
-                for (int j = 1; j < subjects.size(); j++) {
-                    timetableWriter.write(", " + subjects.get(j).name());
-                }
-                timetableWriter.newLine();
-            }
-        }
-        timetableWriter.close();
+        TimetableToPDFConverter converter = new TimetableToPDFConverter(this);
+        converter.toPDF(new File(file + "/timetable.pdf"));
 
         //Writing a separate timetable for each student
         for (Student student : Student.students) {
-            BufferedWriter studentTable = new BufferedWriter(new FileWriter(file + "/" + student.name + "-timetable.txt"));
-            for (int i = 0; i < 5; i++) {
-                studentTable.write((i + 1) + ". " + days.get(i) + ":");
-                studentTable.newLine();
-                for (Group g : this.days[i]) {
-                    studentTable.write("- ");
-                    List<Subject> subjects = new ArrayList<>(g.subjects);
-                    boolean isFirst = true;
-                    if (student.subjects.contains(subjects.get(0))) {
-                        studentTable.write(subjects.get(0).name());
-                        isFirst = false;
-                    }
-                    for (int j = 1; j < subjects.size(); j++) {
-                        if (student.subjects.contains(subjects.get(j))) {
-                            studentTable.write((isFirst ? "" : ", ") + subjects.get(j).name());
-                            isFirst = false;
-                        }
-                    }
-                    studentTable.newLine();
-                }
-            }
-            studentTable.close();
+            converter.toPDF(new File(file + "/" + student.name + "-timetable.pdf"), student);
         }
 
         //Serializing the timetable and saving to file

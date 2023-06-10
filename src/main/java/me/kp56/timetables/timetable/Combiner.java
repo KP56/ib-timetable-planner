@@ -6,10 +6,7 @@ import java.io.ObjectInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class Combiner {
@@ -59,7 +56,15 @@ public class Combiner {
     }
 
     private List<String> extractTeachers(int day, int i, Timetable timetable, Map<Subject, String> teachers) {
-        return new ArrayList<>(timetable.days[day].get(i).subjects.stream().map(teachers::get).filter(el -> el != null && !el.isEmpty()).toList());
+        Map<Subject, List<String>> newMap = new HashMap<>();
+        for (Map.Entry<Subject, String> entry : teachers.entrySet()) {
+            newMap.put(entry.getKey(), List.of(entry.getValue().split(",")));
+        }
+
+        List<List<String>> l = new ArrayList<>(timetable.days[day].get(i).subjects.stream().map(newMap::get).filter(el -> el != null && !el.isEmpty() && (el.size() != 1 || !el.get(0).equals(""))).toList());
+        List<String> returnVal = new ArrayList<>();
+        for (List<String> l2 : l) returnVal.addAll(l2);
+        return returnVal;
     }
 
     private boolean canCoexist(Timetable timetable1, Timetable timetable2) {
