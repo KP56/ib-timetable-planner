@@ -176,10 +176,21 @@ public class FixerCache {
                 List<Integer> unnormalizedIndexes = new ArrayList<>();
                 for (int i = 0; i < longestPathFrom.length; i++) {
                     Group g = allGroups.get(i);
+                    if (!g.isMaximal) continue;
                     if (!canAddGroup(g, subjectMap, dailyMap)) continue;
                     unnormalized.add(longestPathFrom[i]);
                     unnormalizedIndexes.add(i);
                 }
+
+                if (unnormalized.isEmpty()) {
+                    for (int i = 0; i < longestPathFrom.length; i++) {
+                        Group g = allGroups.get(i);
+                        if (!canAddGroup(g, subjectMap, dailyMap)) continue;
+                        unnormalized.add(longestPathFrom[i]);
+                        unnormalizedIndexes.add(i);
+                    }
+                }
+
                 if (unnormalized.isEmpty()) {
                     continueCounter++;
                     continue;
