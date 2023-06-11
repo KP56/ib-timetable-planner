@@ -10,6 +10,7 @@ public class Group implements Serializable {
 
     public Set<Subject> subjects;
     public Set<Student> students = new HashSet<>();
+    public boolean isMaximal = false;
 
     public Group(Set<Subject> subjects) {
         this.subjects = subjects;
@@ -48,6 +49,7 @@ public class Group implements Serializable {
 
     //A recursive implementation of generating all possible groups of subjects
     private static void recursiveGen(Group current, Set<Group> groups) {
+        boolean isMaximal = true;
         for (Subject subject : Subject.values()) {
             if (!subject.disabled()) {
                 if (!current.subjects.contains(subject)) {
@@ -56,6 +58,7 @@ public class Group implements Serializable {
                     Group newGroup = Group.attempt(subjects);
 
                     if (newGroup != null) {
+                        isMaximal = false;
                         if (groups.add(newGroup)) {
                             recursiveGen(newGroup, groups);
                         }
@@ -63,6 +66,9 @@ public class Group implements Serializable {
                 }
             }
         }
+
+        if (isMaximal)
+            current.isMaximal = true;
     }
 
     //Calls the recursive function in order to generate all possible groups

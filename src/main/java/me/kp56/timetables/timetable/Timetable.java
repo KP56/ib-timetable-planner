@@ -48,28 +48,32 @@ public class Timetable implements Serializable {
         int worstStart = 0;
         int worstEnd = 0;
 
+        int nonTeachers = (int) Student.students.stream().filter((student) -> !student.isTeacher).count();
+
         for (Student student : Student.students) {
-            for (List<Group> groups : days) {
-                int start = 0;
-                int end = groups.size() - 1;
-                for (Group group : groups) {
-                    if (group.students.contains(student)) {
-                        break;
+            if (!student.isTeacher) {
+                for (List<Group> groups : days) {
+                    int start = 0;
+                    int end = groups.size() - 1;
+                    for (Group group : groups) {
+                        if (group.students.contains(student)) {
+                            break;
+                        }
+                        start++;
                     }
-                    start++;
-                }
 
-                for (int i = groups.size() - 1; i >= 0; i--) {
-                    if (groups.get(i).students.contains(student)) {
-                        break;
+                    for (int i = groups.size() - 1; i >= 0; i--) {
+                        if (groups.get(i).students.contains(student)) {
+                            break;
+                        }
+                        end--;
                     }
-                    end--;
-                }
 
-                worstStart = Math.max(worstStart, start);
-                worstEnd = Math.max(worstEnd, end);
-                averageStart += (double) start / (5 * Student.students.size());
-                averageEnd += (double) end / (5 * Student.students.size());
+                    worstStart = Math.max(worstStart, start);
+                    worstEnd = Math.max(worstEnd, end);
+                    averageStart += (double) start / (5 * nonTeachers);
+                    averageEnd += (double) end / (5 * nonTeachers);
+                }
             }
         }
 
@@ -96,7 +100,9 @@ public class Timetable implements Serializable {
 
         //Writing a separate timetable for each student
         for (Student student : Student.students) {
-            converter.toPDF(new File(file + "/" + student.name + "-timetable.pdf"), student);
+            if (!student.isTeacher) {
+                converter.toPDF(new File(file + "/" + student.name + "-timetable.pdf"), student);
+            }
         }
 
         //Serializing the timetable and saving to file
@@ -186,7 +192,7 @@ public class Timetable implements Serializable {
         totalLessons.modifyRecord(10, 14, 3, 1, 0, 0);
 
         FuzzyContainer totalGaps = new FuzzyContainer(10);
-        totalGaps.modifyRecord(0, 0, 0, 0, 0, 18);
+        totalGaps.modifyRecord(0, 1, 1, 0, 5, 4);
         totalGaps.modifyRecord(1, 0, 1, 3, 6, 8);
         totalGaps.modifyRecord(2, 1, 0, 3, 6, 8);
         totalGaps.modifyRecord(3, 1, 2, 3, 5, 7);
@@ -227,121 +233,127 @@ public class Timetable implements Serializable {
         weeklyGaps.modifyRecord(14, 10, 0, 0, 3, 0);
         weeklyGaps.modifyRecord(15, 10, 0, 0, 3, 0);
 
+        int nonTeachers = (int) Student.students.stream().filter((student) -> !student.isTeacher).count();
+
         double totalEvaluation = 0;
         List<Double> studentEvaluations = new ArrayList<>();
         for (Student student : Student.students) {
-            //Evaluating each student seperately
-            double studentEvaluation = 0;
-            int weeklyGapsCount = 0;
-            for (List<Group> groups : days) {
-                //Evaluating each day using the day containers
-                int start = 0;
-                int end = groups.size() - 1;
-                for (Group group : groups) {
-                    if (group.students.contains(student)) {
-                        break;
-                    }
-                    start++;
-                }
-
-                for (int j = groups.size() - 1; j >= 0; j--) {
-                    if (groups.get(j).students.contains(student)) {
-                        break;
-                    }
-                    end--;
-                }
-
-                List<Integer> gapsInARowList = new ArrayList<>();
-                int gaps = 0;
-                int prevGap = -2;
-                for (int i = start; i <= end; i++) {
-                    if (!groups.get(i).students.contains(student)) {
-                        if (prevGap == i - 1) {
-                            gapsInARowList.set(gapsInARowList.size() - 1, gapsInARowList.get(gapsInARowList.size() - 1) + 1);
-                        } else {
-                            gapsInARowList.add(1);
+            if (!student.isTeacher) {
+                //Evaluating each student seperately
+                double studentEvaluation = 0;
+                int weeklyGapsCount = 0;
+                for (List<Group> groups : days) {
+                    //Evaluating each day using the day containers
+                    int start = 0;
+                    int end = groups.size() - 1;
+                    for (Group group : groups) {
+                        if (group.students.contains(student)) {
+                            break;
                         }
-                        gaps++;
-                        weeklyGapsCount++;
-                        prevGap = i;
+                        start++;
                     }
+
+                    for (int j = groups.size() - 1; j >= 0; j--) {
+                        if (groups.get(j).students.contains(student)) {
+                            break;
+                        }
+                        end--;
+                    }
+
+                    List<Integer> gapsInARowList = new ArrayList<>();
+                    int gaps = 0;
+                    int prevGap = -2;
+                    for (int i = start; i <= end; i++) {
+                        if (!groups.get(i).students.contains(student)) {
+                            if (prevGap == i - 1) {
+                                gapsInARowList.set(gapsInARowList.size() - 1, gapsInARowList.get(gapsInARowList.size() - 1) + 1);
+                            } else {
+                                gapsInARowList.add(1);
+                            }
+                            gaps++;
+                            weeklyGapsCount++;
+                            prevGap = i;
+                        }
+                    }
+
+                    int gapGroups = gapsInARowList.size();
+
+                    if (end < start) {
+                        System.out.println("Encountered a timetable with some student having no lessons at some day. Deprioritizing...");
+                        return 0;
+                    }
+
+                    int totalLessonsCount = end - start + 1;
+
+                    List<List<Double>> parameters = new ArrayList<>();
+                    List<Double> firstGroup = new ArrayList<>();
+                    firstGroup.add((double) (start));
+                    firstGroup.add((double) (end));
+                    firstGroup.add((double) (totalLessonsCount - 1));
+                    firstGroup.add((double) (gaps));
+                    List<Double> secondGroup = new ArrayList<>();
+                    for (int i : gapsInARowList) {
+                        secondGroup.add((double) i - 1d);
+                    }
+                    parameters.add(firstGroup);
+                    parameters.add(secondGroup);
+
+                    FuzzyLogic dailyLogic = new FuzzyLogic();
+                    dailyLogic.addGroup();
+                    dailyLogic.addGroup();
+                    dailyLogic.addContainer(0, startingLessons);
+                    dailyLogic.addContainer(0, endingLessons);
+                    dailyLogic.addContainer(0, totalLessons);
+                    dailyLogic.addContainer(0, totalGaps);
+
+                    for (int i = 0; i < gapsInARowList.size(); i++) {
+                        dailyLogic.addContainer(1, gapsInARow);
+                    }
+
+                    studentEvaluation += (dailyLogic.evaluate(parameters) + gapGroups / 5d) / 5d;
                 }
-
-                int gapGroups = gapsInARowList.size();
-
-                if (end < start) {
-                    System.out.println("Encountered a timetable with some student having no lessons at some day. Deprioritizing...");
-                    return 0;
-                }
-
-                int totalLessonsCount = end - start + 1;
-
-                List<List<Double>> parameters = new ArrayList<>();
-                List<Double> firstGroup = new ArrayList<>();
-                firstGroup.add((double) (start));
-                firstGroup.add((double) (end));
-                firstGroup.add((double) (totalLessonsCount - 1));
-                firstGroup.add((double) (gaps));
-                List<Double> secondGroup = new ArrayList<>();
-                for (int i : gapsInARowList) {
-                    secondGroup.add((double) i - 1d);
-                }
-                parameters.add(firstGroup);
-                parameters.add(secondGroup);
-
-                FuzzyLogic dailyLogic = new FuzzyLogic();
-                dailyLogic.addGroup();
-                dailyLogic.addGroup();
-                dailyLogic.addContainer(0, startingLessons);
-                dailyLogic.addContainer(0, endingLessons);
-                dailyLogic.addContainer(0, totalLessons);
-                dailyLogic.addContainer(0, totalGaps);
-
-                for (int i = 0; i < gapsInARowList.size(); i++) {
-                    dailyLogic.addContainer(1, gapsInARow);
-                }
-
-                studentEvaluation += (dailyLogic.evaluate(parameters) + gapGroups / 5d) / 5d;
+                studentEvaluation += weeklyGaps.evaluate(Math.min(15, weeklyGapsCount));
+                totalEvaluation += studentEvaluation / nonTeachers;
+                studentEvaluations.add(studentEvaluation);
             }
-            studentEvaluation += weeklyGaps.evaluate(Math.min(15, weeklyGapsCount));
-            totalEvaluation += studentEvaluation / Student.students.size();
-            studentEvaluations.add(studentEvaluation);
         }
 
         double diffEvaluation = 0d;
         for (double d : studentEvaluations) {
             diffEvaluation += Math.abs(d - totalEvaluation);
         }
-        diffEvaluation /= 10.2 * Student.students.size();
+        diffEvaluation /= 10.2 * studentEvaluations.size();
 
-        return (totalEvaluation / 10.2) * (config.getInteger("fuzzylogic.rate") / 100d) + (45d * Student.students.size() - gaps())
-                / (45d * Student.students.size()) * ((100d - config.getInteger("fuzzylogic.rate")) / 100d) + diffEvaluation * 0.2;
+        return (totalEvaluation / 10.2) * (config.getInteger("fuzzylogic.rate") / 100d) + (45d * studentEvaluations.size() - gaps())
+                / (45d * studentEvaluations.size()) * ((100d - config.getInteger("fuzzylogic.rate")) / 100d) + diffEvaluation * 0.2;
     }
 
     //Computes the total number of gaps which students have
     public int gaps() {
         int noLessons = 0;
         for (Student student : Student.students) {
-            for (List<Group> groups : days) {
-                int start = 0;
-                int end = groups.size() - 1;
-                for (Group group : groups) {
-                    if (group.students.contains(student)) {
-                        break;
+            if (!student.isTeacher) {
+                for (List<Group> groups : days) {
+                    int start = 0;
+                    int end = groups.size() - 1;
+                    for (Group group : groups) {
+                        if (group.students.contains(student)) {
+                            break;
+                        }
+                        start++;
                     }
-                    start++;
-                }
 
-                for (int i = groups.size() - 1; i >= 0; i--) {
-                    if (groups.get(i).students.contains(student)) {
-                        break;
+                    for (int i = groups.size() - 1; i >= 0; i--) {
+                        if (groups.get(i).students.contains(student)) {
+                            break;
+                        }
+                        end--;
                     }
-                    end--;
-                }
 
-                for (int i = start; i <= end; i++) {
-                    if (!groups.get(i).students.contains(student)) {
-                        noLessons++;
+                    for (int i = start; i <= end; i++) {
+                        if (!groups.get(i).students.contains(student)) {
+                            noLessons++;
+                        }
                     }
                 }
             }

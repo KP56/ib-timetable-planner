@@ -1,6 +1,7 @@
 package me.kp56.timetables.timetable.fix;
 
 import me.kp56.timetables.configuration.Config;
+import me.kp56.timetables.run.Runner;
 import me.kp56.timetables.timetable.*;
 
 import java.util.*;
@@ -30,8 +31,10 @@ public class FixerCache {
                 Group g2 = allGroups.get(j);
                 if (i != j) {
                     for (Student s : g.students) {
-                        if (!g2.students.contains(s)) {
-                            continue group2Loop;
+                        if (!s.isTeacher) {
+                            if (!g2.students.contains(s)) {
+                                continue group2Loop;
+                            }
                         }
                     }
 
@@ -163,7 +166,7 @@ public class FixerCache {
                     break;
                 }
 
-                if (timetable.days[day].size() == config.getInteger("maximum_daily_lessons")) {
+                if (timetable.days[day].size() == 11) {
                     continueCounter++;
                     continue;
                 }
@@ -186,7 +189,7 @@ public class FixerCache {
                 Group currentGroup = allGroups.get(current);
                 updateMaps(currentGroup, subjectMap, dailyMap);
                 groups.add(currentGroup);
-                while (!graph.get(current).isEmpty() && groups.size() < config.getInteger("maximum_daily_lessons") - timetable.days[day].size() && !subjectMap.isEmpty()) {
+                while (!graph.get(current).isEmpty() && groups.size() < 11 - timetable.days[day].size() && !subjectMap.isEmpty()) {
                     List<Integer> copy = new ArrayList<>();
                     List<Integer> indexes = new ArrayList<>();
                     for (int i : graph.get(current)) {
@@ -203,7 +206,7 @@ public class FixerCache {
                     current = indexes.get(Runner.randomItem(newProbabilities));
                     currentGroup = allGroups.get(current);
                     updateMaps(currentGroup, subjectMap, dailyMap);
-                    if (groups.size() + 1 < config.getInteger("maximum_daily_lessons") - timetable.days[day].size()) {
+                    if (groups.size() + 1 < 11 - timetable.days[day].size()) {
                         //Checking if it's possible to add 2 groups in a row
 
                         if (canAddGroup(currentGroup, subjectMap, dailyMap)) {

@@ -1,7 +1,6 @@
 package me.kp56.timetables.ui.run;
 
-import me.kp56.timetables.timetable.Runner;
-import me.kp56.timetables.timetable.Timetable;
+import me.kp56.timetables.run.Runner;
 import me.kp56.timetables.ui.ScreenSize;
 
 import javax.swing.*;
@@ -10,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class RunDialog extends JFrame implements ActionListener {
     private Runner runner;

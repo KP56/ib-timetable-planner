@@ -8,12 +8,21 @@ public class Student implements Serializable {
 
     public Set<Subject> subjects = new HashSet<>();
     public String name;
+    public boolean isTeacher;
 
     public Student(String name) {
         this.name = name;
     }
 
+    public Student(String name, Collection<Subject> subjects, boolean teacher) {
+        this(name, subjects);
+
+        this.isTeacher = teacher;
+    }
+
     public Student(String name, Collection<Subject> subjects) {
+        this.isTeacher = false;
+
         this.name = name;
         for (Subject subject : subjects) {
             this.subjects.add(subject);

@@ -32,12 +32,8 @@ public class PreRunSettings extends JFrame {
         centerPanel.add(field);
         JButton selectButton = new JButton("Select");
         selectButton.addActionListener(actionEvent -> {
-            try {
-                dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-                new RunDialog(field.getText());
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+            new SingleClassTeachers(field.getText());
         });
         southPanel.add(selectButton);
         setVisible(true);

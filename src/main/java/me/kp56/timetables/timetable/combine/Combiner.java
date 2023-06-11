@@ -1,4 +1,7 @@
-package me.kp56.timetables.timetable;
+package me.kp56.timetables.timetable.combine;
+
+import me.kp56.timetables.timetable.Subject;
+import me.kp56.timetables.timetable.Timetable;
 
 import java.io.FileInputStream;
 import java.io.IOException;

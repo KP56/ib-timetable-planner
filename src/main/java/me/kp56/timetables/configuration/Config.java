@@ -36,23 +36,22 @@ public class Config {
         valueSettings.put("genetic.fix_tries", 5);
 
         valueSettings.put("maximum_daily_subjects", 2);
-        valueSettings.put("maximum_daily_lessons", 11);
 
         valueSettings.put("keep_track_of", 10);
 
         valueSettings.put("fuzzylogic.rate", 50);
 
-        booleanSettings.put("history.connected", true);
+        booleanSettings.put("history.connected", false);
         booleanSettings.put("math_aa.connected", false);
         booleanSettings.put("economics.connected", false);
-        booleanSettings.put("polish_a.connected", true);
+        booleanSettings.put("polish_a.connected", false);
         booleanSettings.put("english_a.connected", false);
         booleanSettings.put("german_b.connected", false);
         booleanSettings.put("spanish_b.connected", false);
         booleanSettings.put("biology.connected", false);
-        booleanSettings.put("chemistry.connected", true);
+        booleanSettings.put("chemistry.connected", false);
         booleanSettings.put("physics.connected", false);
-        booleanSettings.put("computer_science.connected", true);
+        booleanSettings.put("computer_science.connected", false);
         booleanSettings.put("french_b.connected", false);
         booleanSettings.put("geography.connected", false);
 

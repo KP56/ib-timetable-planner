@@ -1,6 +1,6 @@
 package me.kp56.timetables.ui.run;
 
-import me.kp56.timetables.timetable.Combiner;
+import me.kp56.timetables.timetable.combine.Combiner;
 import me.kp56.timetables.timetable.Subject;
 import me.kp56.timetables.ui.ScreenSize;
 

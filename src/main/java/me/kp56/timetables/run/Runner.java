@@ -1,6 +1,7 @@
-package me.kp56.timetables.timetable;
+package me.kp56.timetables.run;
 
 import me.kp56.timetables.configuration.Config;
+import me.kp56.timetables.timetable.Timetable;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Runner {
-    // @KP56 here u have old main function without logging loop
     private static Config config = Config.getInstance();
     private static File workingDir = new File(System.getProperty("user.dir"));
     // change it to false in order to stop algorithm
