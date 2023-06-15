@@ -41,7 +41,7 @@ public class Combiner {
                                 timetable.source = path.toString();
                                 timetables.add(timetable);
                             } catch (IOException | ClassNotFoundException e) {
-                                throw new RuntimeException(e);
+                                System.out.println("Could not load timetable: " + path);
                             }
                         }
                     }));
@@ -70,11 +70,17 @@ public class Combiner {
         return returnVal;
     }
 
+    int test = 0;
     private boolean canCoexist(Timetable timetable1, Timetable timetable2) {
         for (int day = 0; day < 5; day++) {
             for (int i = 0; i < Math.min(timetable1.days[day].size(), timetable2.days[day].size()); i++) {
                 List<String> teachers = extractTeachers(day, i, timetable1, teachers1);
                 teachers.addAll(extractTeachers(day, i, timetable2, teachers2));
+
+                if (timetable2.source.equals("runs/4D/1/environment1/candidate_timetable50/binary-timetable.timetable")) {
+                    test = Math.max(test, day);
+                }
+
                 //HashSet deletes all duplicates, so if the size of HashSet is lower than size of teachers then it means that there are duplicates
                 if (new HashSet<>(teachers).size() != teachers.size()) {
                     return false;
@@ -86,11 +92,13 @@ public class Combiner {
     }
 
     public void combine() {
-        double bestRes = 0;
+        double bestRes = Double.MIN_VALUE;
         for (Timetable timetable1 : class1Timetables) {
             for (Timetable timetable2 : class2Timetables) {
                 if (canCoexist(timetable1, timetable2)) {
-                    double res = timetable1.fitness() + timetable2.fitness();
+                    double fit1 = timetable1.fitness();
+                    double fit2 = timetable2.fitness();
+                    double res = fit1 + fit2 - Math.abs(fit1-fit2);
                     if (res > bestRes) {
                         bestRes = res;
                         res1 = timetable1;

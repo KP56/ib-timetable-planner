@@ -1,6 +1,8 @@
 package me.kp56.timetables.ui.run;
 
 import me.kp56.timetables.run.Runner;
+import me.kp56.timetables.timetable.Subject;
+import me.kp56.timetables.timetable.Timetable;
 import me.kp56.timetables.ui.ScreenSize;
 
 import javax.swing.*;
@@ -8,6 +10,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RunDialog extends JFrame implements ActionListener {
@@ -15,7 +19,7 @@ public class RunDialog extends JFrame implements ActionListener {
     private JTextArea textArea = new JTextArea(100, 20);
     private Timer loggingTimer;
     private JButton stopButton;
-    public RunDialog(String studentClass) throws InterruptedException {
+    public RunDialog(String studentClass, Timetable reference, Map<Subject, List<String>> teacherReference) throws InterruptedException {
         setName("Run");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(ScreenSize.getInstance().half());
@@ -26,15 +30,15 @@ public class RunDialog extends JFrame implements ActionListener {
         JButton stopButton = new JButton("Stop");
         stopButton.setAlignmentX(CENTER_ALIGNMENT);
         stopButton.addActionListener(actionEvent -> {
-            if (!runner.keep_running.get()) {
+            if (!runner.keepRunning.get() && runner.saved.get() == runner.environments) {
                 JFrame root = (JFrame) SwingUtilities.getRoot((Component) actionEvent.getSource());
                 root.dispatchEvent(new WindowEvent(root, WindowEvent.WINDOW_CLOSING));
             }
-            runner.keep_running.set(false);
+            runner.keepRunning.set(false);
         });
         contentPane.add(stopButton);
         setVisible(true);
-        runner = new Runner(studentClass);
+        runner = new Runner(studentClass, reference, teacherReference);
         loggingTimer = new Timer(1000, this);
         loggingTimer.start();
     }
@@ -44,7 +48,7 @@ public class RunDialog extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
 
 
-        if (!runner.keep_running.get()) {
+        if (!runner.keepRunning.get()) {
             textArea.append("STOPPED\nPress Stop button again to exit");
             loggingTimer.stop();
             return;

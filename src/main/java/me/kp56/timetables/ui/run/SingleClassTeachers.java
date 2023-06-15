@@ -1,6 +1,6 @@
 package me.kp56.timetables.ui.run;
 
-import me.kp56.timetables.timetable.Student;
+import me.kp56.timetables.students.Student;
 import me.kp56.timetables.timetable.Subject;
 import me.kp56.timetables.ui.ScreenSize;
 
@@ -106,7 +106,7 @@ public class SingleClassTeachers extends JFrame {
 
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
             try {
-                new RunDialog(className);
+                new RunDialog(className, null, null);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

@@ -13,7 +13,7 @@ import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.VerticalAlignment;
 import me.kp56.timetables.timetable.Group;
-import me.kp56.timetables.timetable.Student;
+import me.kp56.timetables.students.Student;
 import me.kp56.timetables.timetable.Subject;
 import me.kp56.timetables.timetable.Timetable;
 

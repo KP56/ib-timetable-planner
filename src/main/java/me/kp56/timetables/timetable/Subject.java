@@ -1,6 +1,7 @@
 package me.kp56.timetables.timetable;
 
 import me.kp56.timetables.configuration.Config;
+import me.kp56.timetables.students.Student;
 
 import java.util.ArrayList;
 import java.util.List;

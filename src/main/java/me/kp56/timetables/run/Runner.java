@@ -1,6 +1,7 @@
 package me.kp56.timetables.run;
 
 import me.kp56.timetables.configuration.Config;
+import me.kp56.timetables.timetable.Subject;
 import me.kp56.timetables.timetable.Timetable;
 
 import java.io.File;
@@ -14,16 +15,21 @@ public class Runner {
     private static Config config = Config.getInstance();
     private static File workingDir = new File(System.getProperty("user.dir"));
     // change it to false in order to stop algorithm
-    public AtomicBoolean keep_running = new AtomicBoolean(true);
+    public AtomicBoolean keepRunning = new AtomicBoolean(true);
 
     public List<AtomicInteger> environmentGaps = new ArrayList<>();
     public List<AtomicReference<Double>> fitnessValues = new ArrayList<>();
+    public AtomicInteger saved = new AtomicInteger();
     public int environments;
     public long beginning;
-    public Runner(String studentClass) {
+    public Runner(String studentClass, Timetable reference, Map<Subject, List<String>> teacherReference) {
         System.out.println("Generating required data structures. The program may hang for a bit.");
         long timestamp = System.currentTimeMillis();
-	    Timetable.init();
+        if (reference == null) {
+            Timetable.init();
+        } else {
+            Timetable.init(reference, teacherReference);
+        }
         System.out.println("FINISHED! Took: " + ((double) (System.currentTimeMillis() - timestamp) / 1000d) + " seconds.");
 
         environments = config.getInteger("genetic.environments");
@@ -47,7 +53,7 @@ public class Runner {
             //Starting a new thread and calling handleEnvironment
             new Thread(() -> {
                 try {
-                    handleEnvironment("runs/" + studentClass + "/" + id + "/environment" + (finalI + 1), environmentGaps.get(finalI), fitnessValues.get(finalI), keep_running);
+                    handleEnvironment("runs/" + studentClass + "/" + id + "/environment" + (finalI + 1), environmentGaps.get(finalI), fitnessValues.get(finalI));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -88,7 +94,7 @@ public class Runner {
 //        }
     }
 
-    private static void handleEnvironment(String name, AtomicInteger currentGaps, AtomicReference<Double> currentFitness, AtomicBoolean keepRunning) throws IOException {
+    private void handleEnvironment(String name, AtomicInteger currentGaps, AtomicReference<Double> currentFitness) throws IOException {
         File environmentDir = new File(name);
 
         if (!environmentDir.exists()) {
@@ -164,8 +170,6 @@ public class Runner {
                             optimal.put(maximalFitness, new ArrayList<>(Collections.singletonList(best)));
                         }
 
-                        deleteAllCandidateFiles(environmentDir);
-                        saveCandidates(environmentDir, optimal);
                         inOptimal.add(best);
                     }
                 } else {
@@ -176,8 +180,6 @@ public class Runner {
                         optimal.put(maximalFitness, new ArrayList<>(Collections.singletonList(best)));
                     }
 
-                    deleteAllCandidateFiles(environmentDir);
-                    saveCandidates(environmentDir, optimal);
                     inOptimal.add(best);
 
                     optimalSize++;
@@ -221,6 +223,11 @@ public class Runner {
                 }
             }
         }
+
+        deleteAllCandidateFiles(environmentDir);
+        saveCandidates(environmentDir, optimal);
+
+        saved.incrementAndGet();
     }
 
     private static void saveCandidates(File dir, Map<Double, List<Timetable>> optimal) throws IOException {

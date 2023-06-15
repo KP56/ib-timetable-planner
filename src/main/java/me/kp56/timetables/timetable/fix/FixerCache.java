@@ -2,6 +2,7 @@ package me.kp56.timetables.timetable.fix;
 
 import me.kp56.timetables.configuration.Config;
 import me.kp56.timetables.run.Runner;
+import me.kp56.timetables.students.Student;
 import me.kp56.timetables.timetable.*;
 
 import java.util.*;
@@ -15,6 +16,15 @@ public class FixerCache {
 
     private List<Integer> revTopSort;
     private Integer[] longestPathFrom;
+    private Timetable reference;
+    private Map<Subject, List<String>> teachersReference;
+
+    public FixerCache(Timetable reference, Map<Subject, List<String>> teachersReference) {
+        this();
+
+        this.reference = reference;
+        this.teachersReference = teachersReference;
+    }
 
     public FixerCache() {
         allGroups = Group.generateAll();
@@ -114,7 +124,6 @@ public class FixerCache {
         }
     }
 
-    //TODO: improve it
     public boolean fix(Timetable timetable, List<Integer> daysToCheck, int tries) {
         if (tries == config.getInteger("genetic.fix_tries")) {
             return false;
@@ -177,7 +186,7 @@ public class FixerCache {
                 for (int i = 0; i < longestPathFrom.length; i++) {
                     Group g = allGroups.get(i);
                     if (!g.isMaximal) continue;
-                    if (!canAddGroup(g, subjectMap, dailyMap)) continue;
+                    if (!canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size())) continue;
                     unnormalized.add(longestPathFrom[i]);
                     unnormalizedIndexes.add(i);
                 }
@@ -185,7 +194,7 @@ public class FixerCache {
                 if (unnormalized.isEmpty()) {
                     for (int i = 0; i < longestPathFrom.length; i++) {
                         Group g = allGroups.get(i);
-                        if (!canAddGroup(g, subjectMap, dailyMap)) continue;
+                        if (!canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size())) continue;
                         unnormalized.add(longestPathFrom[i]);
                         unnormalizedIndexes.add(i);
                     }
@@ -205,7 +214,7 @@ public class FixerCache {
                     List<Integer> indexes = new ArrayList<>();
                     for (int i : graph.get(current)) {
                         Group g = allGroups.get(i);
-                        if (!canAddGroup(g, subjectMap, dailyMap)) continue;
+                        if (!canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size())) continue;
                         copy.add(longestPathFrom[i]);
                         indexes.add(i);
                     }
@@ -220,7 +229,7 @@ public class FixerCache {
                     if (groups.size() + 1 < 11 - timetable.days[day].size()) {
                         //Checking if it's possible to add 2 groups in a row
 
-                        if (canAddGroup(currentGroup, subjectMap, dailyMap)) {
+                        if (canAddGroup(currentGroup, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size() + 1)) {
                             groups.add(currentGroup);
                             updateMaps(currentGroup, subjectMap, dailyMap);
                         }
@@ -259,7 +268,33 @@ public class FixerCache {
         return true;
     }
 
-    private static boolean canAddGroup(Group currentGroup, Map<Subject, Integer> subjectMap, Map<Subject, Integer> dailyMap) {
+    private boolean canAddGroup(Group currentGroup, Map<Subject, Integer> subjectMap, Map<Subject, Integer> dailyMap, int day, int i) {
+        if (reference != null) {
+            if (reference.days[day].size() > i) {
+                Set<Subject> referenceSubjects = reference.days[day].get(i).subjects;
+                List<String> teachers = new ArrayList<>();
+
+                for (Subject s : referenceSubjects) {
+                    teachers.addAll(teachersReference.get(s));
+                }
+
+                for (Student s : Student.students) {
+                    if (s.isTeacher) {
+                        for (Subject sub : currentGroup.subjects) {
+                            if (s.subjects.contains(sub))
+                                teachers.add(s.name);
+                        }
+                    }
+                }
+
+                if (new HashSet<>(teachers).size() != teachers.size()) {
+                    return false;
+                } else {
+                    int test = 0;
+                }
+            }
+        }
+
         for (Subject s : currentGroup.subjects) {
             if (!subjectMap.containsKey(s) || (dailyMap.containsKey(s) && dailyMap.get(s) == config.getInteger("maximum_daily_subjects"))) {
                 return false;
@@ -269,7 +304,7 @@ public class FixerCache {
         return true;
     }
 
-    private static void updateMaps(Group currentGroup, Map<Subject, Integer> subjectMap, Map<Subject, Integer> dailyMap) {
+    private void updateMaps(Group currentGroup, Map<Subject, Integer> subjectMap, Map<Subject, Integer> dailyMap) {
         for (Subject s : currentGroup.subjects) {
             subjectMap.replace(s, subjectMap.get(s) - 1);
             if (!dailyMap.containsKey(s)) {

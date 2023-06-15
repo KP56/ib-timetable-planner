@@ -1,7 +1,6 @@
 package me.kp56.timetables.ui.editor;
 
-import me.kp56.timetables.timetable.Student;
-import me.kp56.timetables.ui.ScreenSize;
+import me.kp56.timetables.students.Student;
 
 import javax.swing.*;
 import java.awt.*;

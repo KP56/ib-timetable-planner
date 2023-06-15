@@ -32,7 +32,7 @@ public class Config {
     private Config() {
         valueSettings.put("genetic.generation_size", 50);
         valueSettings.put("genetic.environments", -1);
-        valueSettings.put("genetic.environment_timeout", 120);
+        valueSettings.put("genetic.environment_timeout", 30);
         valueSettings.put("genetic.fix_tries", 5);
 
         valueSettings.put("maximum_daily_subjects", 2);

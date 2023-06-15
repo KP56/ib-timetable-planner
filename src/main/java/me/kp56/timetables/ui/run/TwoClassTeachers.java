@@ -1,7 +1,10 @@
 package me.kp56.timetables.ui.run;
 
+import me.kp56.timetables.students.Student;
+import me.kp56.timetables.timetable.Timetable;
 import me.kp56.timetables.timetable.combine.Combiner;
 import me.kp56.timetables.timetable.Subject;
+import me.kp56.timetables.timetable.fix.FixerCache;
 import me.kp56.timetables.ui.ScreenSize;
 
 import javax.swing.*;
@@ -12,11 +15,13 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class CombinerSettings extends JFrame {
-    public CombinerSettings(String class1, String class2) {
+public class TwoClassTeachers extends JFrame {
+    public TwoClassTeachers(String class1, String class2, Timetable reference) {
         super("Provide names of teachers");
 
         setName("Combine timetables");
@@ -74,8 +79,8 @@ public class CombinerSettings extends JFrame {
         js.setVisible(true);
         add(js);
 
-        JButton combineButton = new JButton("Combine");
-        combineButton.addActionListener(actionEvent -> {
+        JButton submitButton = new JButton("Submit");
+        submitButton.addActionListener(actionEvent -> {
             if (table.getCellEditor() != null) {
                 table.getCellEditor().stopCellEditing();
             }
@@ -99,37 +104,44 @@ public class CombinerSettings extends JFrame {
                 throw new RuntimeException(e);
             }
 
+            Map<String, List<Subject>> reverseMap = new HashMap<>();
+            for (Map.Entry<Subject, String> entry : teachers2.entrySet()) {
+                if (entry.getValue() != null && !entry.getValue().isEmpty()) {
+                    for (String teacher : entry.getValue().split(",")) {
+                        if (!teacher.isEmpty()) {
+                            if (!reverseMap.containsKey(teacher)) {
+                                reverseMap.put(teacher, new ArrayList<>(List.of(entry.getKey())));
+                            } else {
+                                reverseMap.get(teacher).add(entry.getKey());
+                            }
+                        }
+                    }
+                }
+            }
+
+            //@Wasymir's idea, treating each teacher as a student who has the subjects they teach
+            for (Map.Entry<String, List<Subject>> teacherEntry : reverseMap.entrySet()) {
+                if (teacherEntry.getValue().size() >= 1) {
+                    Student.students.add(new Student(teacherEntry.getKey(), teacherEntry.getValue(), true));
+                }
+            }
+
+            Map<Subject, List<String>> referenceTeachers = new HashMap<>();
+            for (Map.Entry<Subject, String> entry : teachers1.entrySet()) {
+                if (!entry.getValue().isEmpty()) {
+                    referenceTeachers.put(entry.getKey(), List.of(entry.getValue().split(",")));
+                }
+            }
+
+            dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
             try {
-                Combiner combiner = new Combiner(class1, class2, teachers1, teachers2);
-                combiner.combine();
-                if (combiner.getFirst() == null || combiner.getSecond() == null) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Could not find 2 timetables from both classes capable of coexisting.",
-                            "Could not combine the timetables", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                File combinerDir = new File("combined");
-                if (!combinerDir.exists()) combinerDir.mkdirs();
-
-                for (File f : combinerDir.listFiles()) {
-                    deleteDirectory(f);
-                }
-
-                File classOneDir = new File(combinerDir, class1);
-                File classTwoDir = new File(combinerDir, class2);
-
-                copyDirectory(Path.of(combiner.getFirst().source).getParent().toString(), classOneDir.toString());
-                copyDirectory(Path.of(combiner.getSecond().source).getParent().toString(), classTwoDir.toString());
-
-                dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-                JOptionPane.showMessageDialog(new JFrame(), "Successfully combined 2 timetables. Check \"combined\" folder.",
-                        "Combined timetables", JOptionPane.INFORMATION_MESSAGE);
-            } catch (IOException e) {
+                new RunDialog(class2, reference, referenceTeachers);
+            } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         });
 
-        add(combineButton);
+        add(submitButton);
 
         setVisible(true);
         //pack();

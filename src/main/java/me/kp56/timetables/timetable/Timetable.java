@@ -4,6 +4,7 @@ import me.kp56.timetables.configuration.Config;
 import me.kp56.timetables.fuzzylogic.FuzzyContainer;
 import me.kp56.timetables.fuzzylogic.FuzzyLogic;
 import me.kp56.timetables.pdf.TimetableToPDFConverter;
+import me.kp56.timetables.students.Student;
 import me.kp56.timetables.timetable.fix.FixerCache;
 
 import java.io.*;
@@ -18,9 +19,14 @@ public class Timetable implements Serializable {
 
     //A field which can be set after loading the timetable from file to be able to extract timetable's path
     public transient String source;
+    public String clazz;
 
     public static void init() {
         cache = new FixerCache();
+    }
+
+    public static void init(Timetable reference, Map<Subject, List<String>> teachersReference) {
+        cache = new FixerCache(reference, teachersReference);
     }
 
     public Timetable() {
@@ -113,6 +119,7 @@ public class Timetable implements Serializable {
         try {
             FileOutputStream fos = new FileOutputStream(file + "/binary-timetable.timetable");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
+            clazz = new File(file).getParentFile().getParentFile().getParentFile().getParentFile().getName();
             oos.writeObject(this);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -366,32 +373,34 @@ public class Timetable implements Serializable {
     public int worstGaps() {
         int worstGaps = 0;
         for (Student student : Student.students) {
-            int noLessons = 0;
-            for (List<Group> groups : days) {
-                int start = 0;
-                int end = groups.size() - 1;
-                for (Group group : groups) {
-                    if (group.students.contains(student)) {
-                        break;
+            if (!student.isTeacher) {
+                int noLessons = 0;
+                for (List<Group> groups : days) {
+                    int start = 0;
+                    int end = groups.size() - 1;
+                    for (Group group : groups) {
+                        if (group.students.contains(student)) {
+                            break;
+                        }
+                        start++;
                     }
-                    start++;
+
+                    for (int i = groups.size() - 1; i >= 0; i--) {
+                        if (groups.get(i).students.contains(student)) {
+                            break;
+                        }
+                        end--;
+                    }
+
+                    for (int i = start; i <= end; i++) {
+                        if (!groups.get(i).students.contains(student)) {
+                            noLessons++;
+                        }
+                    }
                 }
 
-                for (int i = groups.size() - 1; i >= 0; i--) {
-                    if (groups.get(i).students.contains(student)) {
-                        break;
-                    }
-                    end--;
-                }
-
-                for (int i = start; i <= end; i++) {
-                    if (!groups.get(i).students.contains(student)) {
-                        noLessons++;
-                    }
-                }
+                worstGaps = Math.max(worstGaps, noLessons);
             }
-
-            worstGaps = Math.max(worstGaps, noLessons);
         }
 
         return worstGaps;

@@ -1,4 +1,6 @@
-package me.kp56.timetables.timetable;
+package me.kp56.timetables.students;
+
+import me.kp56.timetables.timetable.Subject;
 
 import java.io.*;
 import java.util.*;

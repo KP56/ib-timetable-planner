@@ -1,5 +1,6 @@
 package me.kp56.timetables.ui.run;
 
+import me.kp56.timetables.timetable.Timetable;
 import me.kp56.timetables.ui.ScreenSize;
 
 import javax.swing.*;
@@ -7,7 +8,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 
 public class PreRunSettings extends JFrame {
-    public PreRunSettings() {
+    public PreRunSettings(String referenceClass, Timetable reference) {
         super("Provide class name");
 
         setName("Provide class name");
@@ -33,7 +34,11 @@ public class PreRunSettings extends JFrame {
         JButton selectButton = new JButton("Select");
         selectButton.addActionListener(actionEvent -> {
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-            new SingleClassTeachers(field.getText());
+            if (referenceClass == null) {
+                new SingleClassTeachers(field.getText());
+            } else {
+                new TwoClassTeachers(referenceClass, field.getText(), reference);
+            }
         });
         southPanel.add(selectButton);
         setVisible(true);
