@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="72eea587-cdb7-4538-8f65-2dea70f0a16a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/filters/Filter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/filters/FilterMenu.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/filters/ManageFilters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/fuzzylogic/FuzzyContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/fuzzylogic/FuzzyContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/pdf/TimetableToPDFConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/pdf/TimetableToPDFConverter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/run/Runner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/run/Runner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/Subject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/Subject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/Timetable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/Timetable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/combine/Combiner.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/fix/FixerCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/fix/FixerCache.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/UI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/UI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/MenuBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/MenuBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/StudentDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/StudentDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/StudentEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/StudentEditor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/StudentList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/StudentList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/SubjectSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/SubjectSelector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/run/TwoClassTeachers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/run/TwoClassTeachers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/settings/SettingsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/settings/SettingsMenu.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="workspaceImportEnabled" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2PEIEodM5DD7x3g1MJ65WtAiBkm" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveInnerDialog.RECENTS_KEY">
+      <recent name="me.kp56.timetables.timetable" />
+      <recent name="me.kp56.timetables.timetable.fix" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="me.kp56.timetables.Main" />
+      <module name="timetable-generator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="me.kp56.timetables.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="72eea587-cdb7-4538-8f65-2dea70f0a16a" name="Changes" comment="" />
+      <created>1683015706667</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1683015706667</updated>
+    </task>
+    <servers />
+  </component>
+</project>
