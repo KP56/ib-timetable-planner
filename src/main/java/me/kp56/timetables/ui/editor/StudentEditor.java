@@ -20,13 +20,6 @@ public class StudentEditor extends JFrame {
         setSize(ScreenSize.getInstance().getWidth(), ScreenSize.getInstance().getHeight());
         getContentPane().add(splitPane);
 
-
-
-
-
         this.setVisible(true);
-
     }
-
-
 }

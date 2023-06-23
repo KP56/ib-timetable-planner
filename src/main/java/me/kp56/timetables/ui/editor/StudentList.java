@@ -22,35 +22,26 @@ public class StudentList extends JPanel {
 
         studentList.setModel(studentDefaultListModel);
         studentList.setVisibleRowCount(-1);
-        studentList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                root.studentDetails.showStudent(getSelected());
-            }
-        });
+        studentList.addListSelectionListener(listSelectionEvent -> root.studentDetails.showStudent(getSelected()));
 
         add(new JScrollPane(studentList));
 
         JButton addStudentButton = new JButton("ADD");
         addStudentButton.setAlignmentX(CENTER_ALIGNMENT);
-        addStudentButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                String name = JOptionPane.showInputDialog(null, "Enter new student's name:", "Add student");
-                if (name.isEmpty()) {
-                    name = "Bezimienny";
-                }
-                Student newStudent = new Student(name);
-                Student.students.add(newStudent);
-                refresh();
-                root.studentDetails.showStudent(newStudent);
+        addStudentButton.addActionListener(actionEvent -> {
+            String name = JOptionPane.showInputDialog(null, "Enter new student's name:", "Add student");
+            if (name.isEmpty()) {
+                name = "Bezimienny";
             }
+            Student newStudent = new Student(name);
+            Student.students.add(newStudent);
+            refresh();
+            root.studentDetails.showStudent(newStudent);
         });
 
         add(addStudentButton);
 
         setPreferredSize(new Dimension(ScreenSize.getInstance().getWidth() / 5, ScreenSize.getInstance().getHeight()));
-
 
         refresh();
     }

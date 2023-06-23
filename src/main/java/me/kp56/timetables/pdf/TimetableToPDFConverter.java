@@ -59,7 +59,18 @@ public class TimetableToPDFConverter {
                             .stream()
                             .filter(filter)
                             .toList()) {
-                        contents.add(s.toString().replace("_", " "));
+                        Subject s2 = null;
+                        try {
+                            s2 = Subject.valueOf(s.name() + "_2");
+                        } catch (IllegalArgumentException ignored) {
+
+                        }
+
+                        if (s2 == null || s2.disabled()) {
+                            contents.add(s.toSimplifiedString());
+                        } else {
+                            contents.add(s.toString());
+                        }
                     }
                     createSubtable(subtable, contents);
                     elements.add(subtable);

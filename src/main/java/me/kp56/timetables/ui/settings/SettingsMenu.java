@@ -8,12 +8,7 @@ public class SettingsMenu extends JMenu {
     public SettingsMenu(){
         setText("Settings");
         JMenuItem settings = new JMenuItem("Settings");
-        settings.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                new SettingsEditor().setVisible(true);
-            }
-        });
+        settings.addActionListener(actionEvent -> new SettingsEditor().setVisible(true));
 
         add(settings);
 

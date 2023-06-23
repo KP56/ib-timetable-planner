@@ -1,6 +1,8 @@
 package me.kp56.timetables.timetable.fix;
 
 import me.kp56.timetables.configuration.Config;
+import me.kp56.timetables.filters.Filter;
+import me.kp56.timetables.filters.Period;
 import me.kp56.timetables.run.Runner;
 import me.kp56.timetables.students.Student;
 import me.kp56.timetables.timetable.*;
@@ -175,7 +177,7 @@ public class FixerCache {
                     break;
                 }
 
-                if (timetable.days[day].size() == 11) {
+                if (timetable.days[day].size() >= 10) {
                     continueCounter++;
                     continue;
                 }
@@ -186,7 +188,8 @@ public class FixerCache {
                 for (int i = 0; i < longestPathFrom.length; i++) {
                     Group g = allGroups.get(i);
                     if (!g.isMaximal) continue;
-                    if (!canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size())) continue;
+                    if (!canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size()))
+                        continue;
                     unnormalized.add(longestPathFrom[i]);
                     unnormalizedIndexes.add(i);
                 }
@@ -194,7 +197,8 @@ public class FixerCache {
                 if (unnormalized.isEmpty()) {
                     for (int i = 0; i < longestPathFrom.length; i++) {
                         Group g = allGroups.get(i);
-                        if (!canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size())) continue;
+                        if (!canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size()))
+                            continue;
                         unnormalized.add(longestPathFrom[i]);
                         unnormalizedIndexes.add(i);
                     }
@@ -208,13 +212,19 @@ public class FixerCache {
                 int current = unnormalizedIndexes.get(Runner.randomItem(probabilities));
                 Group currentGroup = allGroups.get(current);
                 updateMaps(currentGroup, subjectMap, dailyMap);
+                if (groups.size() + 1 < 11 - timetable.days[day].size() && canAddGroup(currentGroup, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size() + 1)) {
+                    groups.add(currentGroup);
+                    updateMaps(currentGroup, subjectMap, dailyMap);
+                }
+
                 groups.add(currentGroup);
-                while (!graph.get(current).isEmpty() && groups.size() < 11 - timetable.days[day].size() && !subjectMap.isEmpty()) {
+                while (!graph.get(current).isEmpty() && groups.size() < 10 - timetable.days[day].size() && !subjectMap.isEmpty()) {
                     List<Integer> copy = new ArrayList<>();
                     List<Integer> indexes = new ArrayList<>();
                     for (int i : graph.get(current)) {
                         Group g = allGroups.get(i);
-                        if (!canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size())) continue;
+                        if (!canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size()))
+                            continue;
                         copy.add(longestPathFrom[i]);
                         indexes.add(i);
                     }
@@ -226,14 +236,13 @@ public class FixerCache {
                     current = indexes.get(Runner.randomItem(newProbabilities));
                     currentGroup = allGroups.get(current);
                     updateMaps(currentGroup, subjectMap, dailyMap);
-                    if (groups.size() + 1 < 11 - timetable.days[day].size()) {
-                        //Checking if it's possible to add 2 groups in a row
 
-                        if (canAddGroup(currentGroup, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size() + 1)) {
-                            groups.add(currentGroup);
-                            updateMaps(currentGroup, subjectMap, dailyMap);
-                        }
+                    //Checking if it's possible to add 2 groups in a row
+                    if (groups.size() + 1 < 11 - timetable.days[day].size() && canAddGroup(currentGroup, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size() + 1)) {
+                        groups.add(currentGroup);
+                        updateMaps(currentGroup, subjectMap, dailyMap);
                     }
+
                     groups.add(currentGroup);
                 }
                 timetable.days[day].addAll(groups);
@@ -247,22 +256,43 @@ public class FixerCache {
             }
         }
 
-        studentLoop:
+        //Checking whether there exists a student which has no lessons on a particular day
         for (Student student : Student.students) {
-            for (List<Group> groups : timetable.days) {
-                for (Subject subject : student.subjects) {
+            if (!student.isTeacher) {
+                dayLoop:
+                for (List<Group> groups : timetable.days) {
                     for (Group g : groups) {
-                        if (g.subjects.contains(subject)) {
-                            continue studentLoop;
+                        if (g.students.contains(student)) {
+                            continue dayLoop;
                         }
                     }
+
+                    for (int i : daysToCheck) {
+                        timetable.days[i] = new ArrayList<>();
+                    }
+                    return fix(timetable, daysToCheck, tries + 1);
                 }
             }
+        }
 
-            for (int i : daysToCheck) {
-                timetable.days[i] = new ArrayList<>();
+        return true;
+    }
+
+    private boolean containsEvenSubject(Group group) {
+        for (Subject s : group.subjects) {
+            if (s.limit % 2 == 0) {
+                return true;
             }
-            return fix(timetable, daysToCheck, tries + 1);
+        }
+
+        return false;
+    }
+
+    private boolean canAddGroupForSecondTime(Group currentGroup, Map<Subject, Integer> subjectMap, Map<Subject, Integer> dailyMap) {
+        for (Subject s : currentGroup.subjects) {
+            if (Objects.equals(subjectMap.get(s), 1) || Objects.equals(dailyMap.get(s), config.getInteger("maximum_daily_subjects") - 1)) {
+                return false;
+            }
         }
 
         return true;
@@ -289,8 +319,18 @@ public class FixerCache {
 
                 if (new HashSet<>(teachers).size() != teachers.size()) {
                     return false;
-                } else {
-                    int test = 0;
+                }
+            }
+        }
+
+        for (Student student : currentGroup.students) {
+            Filter f = Filter.byName(student.name);
+
+            if (f != null) {
+                for (Period period : f.periods()) {
+                    if (period.isWithin(day, i)) {
+                        return false;
+                    }
                 }
             }
         }

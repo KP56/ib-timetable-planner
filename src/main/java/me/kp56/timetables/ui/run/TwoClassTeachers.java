@@ -2,7 +2,6 @@ package me.kp56.timetables.ui.run;
 
 import me.kp56.timetables.students.Student;
 import me.kp56.timetables.timetable.Timetable;
-import me.kp56.timetables.timetable.combine.Combiner;
 import me.kp56.timetables.timetable.Subject;
 import me.kp56.timetables.timetable.fix.FixerCache;
 import me.kp56.timetables.ui.ScreenSize;

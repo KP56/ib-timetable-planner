@@ -1,6 +1,7 @@
 package me.kp56.timetables.ui.editor;
 
 import me.kp56.timetables.ui.about.HelpMenu;
+import me.kp56.timetables.ui.filters.FilterMenu;
 import me.kp56.timetables.ui.run.RunMenu;
 import me.kp56.timetables.ui.settings.SettingsEditor;
 import me.kp56.timetables.ui.settings.SettingsMenu;
@@ -24,24 +25,14 @@ public class MenuBar extends JMenuBar {
         JMenuItem save = new JMenuItem("Save");
         JMenuItem saveAs = new JMenuItem("Save As");
 
-
-        ActionListener actionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                switch (actionEvent.getActionCommand()) {
-                    case "Open":
-                        StudentsSerializer.getInstance().open();
-                        break;
-                    case "Save":
-                        StudentsSerializer.getInstance().save();
-                        break;
-                    case "Save As":
-                        StudentsSerializer.getInstance().saveAs();
-                        break;
-                }
-                root.studentSelector.refresh();
-                root.studentDetails.showStudent(null);
+        ActionListener actionListener = actionEvent -> {
+            switch (actionEvent.getActionCommand()) {
+                case "Open" -> StudentsSerializer.getInstance().open();
+                case "Save" -> StudentsSerializer.getInstance().save();
+                case "Save As" -> StudentsSerializer.getInstance().saveAs();
             }
+            root.studentSelector.refresh();
+            root.studentDetails.showStudent(null);
         };
 
         open.addActionListener(actionListener);
@@ -54,6 +45,7 @@ public class MenuBar extends JMenuBar {
 
         add(studentsMenu);
 
+        add(new FilterMenu());
         add(new SettingsMenu());
         add(new HelpMenu());
         add(new RunMenu());

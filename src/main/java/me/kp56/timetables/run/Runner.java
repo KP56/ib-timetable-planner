@@ -140,7 +140,7 @@ public class Runner {
                 int gaps = t.gaps();
                 lowestGaps = Math.min(lowestGaps, gaps);
                 minimalFitness = Math.min(minimalFitness, fitness);
-                if (maximalFitness < fitness) {
+                if (maximalFitness <= fitness) {
                     maximalFitness = fitness;
                     best = t;
                     bestGaps = gaps;

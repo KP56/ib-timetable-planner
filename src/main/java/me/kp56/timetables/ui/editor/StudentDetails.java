@@ -35,29 +35,26 @@ public class StudentDetails extends JPanel {
 
         JButton applyButton = new JButton("Apply");
         JButton deleteButton = new JButton("Delete");
-        ActionListener actionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                Student currentStudent = root.studentSelector.getSelected();
-                switch (actionEvent.getActionCommand()) {
-                    case "Apply":
-                        if (studentNameField.getText().isEmpty()) {
-                            currentStudent.name = "Bezimienny";
-                        } else {
-                            currentStudent.name = studentNameField.getText();
-                        }
-                        currentStudent.subjects = subjectSelector.getSubjects();
-                        break;
-                    case "Delete":
-                        if (JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this student?", "Confirm deletion", JOptionPane.YES_NO_OPTION) == 0) {
-                            Student.students.remove(root.studentSelector.getSelected());
-                            currentStudent = null;
-                        }
-                        break;
+        ActionListener actionListener = actionEvent -> {
+            Student currentStudent = root.studentSelector.getSelected();
+            switch (actionEvent.getActionCommand()) {
+                case "Apply" -> {
+                    if (studentNameField.getText().isEmpty()) {
+                        currentStudent.name = "Bezimienny";
+                    } else {
+                        currentStudent.name = studentNameField.getText();
+                    }
+                    currentStudent.subjects = subjectSelector.getSubjects();
                 }
-                root.studentSelector.refresh();
-                showStudent(currentStudent);
+                case "Delete" -> {
+                    if (JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this student?", "Confirm deletion", JOptionPane.YES_NO_OPTION) == 0) {
+                        Student.students.remove(root.studentSelector.getSelected());
+                        currentStudent = null;
+                    }
+                }
             }
+            root.studentSelector.refresh();
+            showStudent(currentStudent);
         };
 
         applyButton.addActionListener(actionListener);

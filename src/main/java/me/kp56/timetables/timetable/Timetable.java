@@ -285,12 +285,11 @@ public class Timetable implements Serializable {
 
                     int gapGroups = gapsInARowList.size();
 
-                    if (end < start) {
-                        System.out.println("Encountered a timetable with some student having no lessons at some day. Deprioritizing...");
+                    int totalLessonsCount = end - start + 1;
+
+                    if (totalLessonsCount == 11 && gaps == 0) {
                         return 0;
                     }
-
-                    int totalLessonsCount = end - start + 1;
 
                     List<List<Double>> parameters = new ArrayList<>();
                     List<Double> firstGroup = new ArrayList<>();
@@ -325,6 +324,43 @@ public class Timetable implements Serializable {
             }
         }
 
+        //Taking into account the fact that subjects should be as far away from each other as possible
+        Map<Subject, Integer> previousPlace = new HashMap<>();
+        Map<Subject, Integer> distances = new HashMap<>();
+        for (int day = 0; day < 5; day++) {
+            for (Group g : days[day]) {
+                for (Subject s : g.subjects) {
+                    if (!previousPlace.containsKey(s)) {
+                        previousPlace.put(s, day);
+                    } else {
+                        int dist = day - previousPlace.get(s);
+                        if (!distances.containsKey(s)) {
+                            if (dist < 2) {
+                                distances.put(s, 1);
+                            }
+                        } else {
+                            if (dist < 2) {
+                                distances.replace(s, distances.get(s) + 1);
+                            }
+                        }
+                        previousPlace.replace(s, day);
+                    }
+                }
+            }
+        }
+
+        int closeSubjectsSum = 0;
+        for (Map.Entry<Subject, Integer> entry : distances.entrySet()) {
+            closeSubjectsSum += entry.getValue();
+        }
+
+        int subjectCountSum = 0;
+        for (Subject subject : Subject.values()) {
+            subjectCountSum += subject.limit / 2;
+        }
+
+        double distRate = (double) closeSubjectsSum / (double) subjectCountSum;
+
         double diffEvaluation = 0d;
         for (double d : studentEvaluations) {
             diffEvaluation += Math.abs(d - totalEvaluation);
@@ -332,7 +368,7 @@ public class Timetable implements Serializable {
         diffEvaluation /= 10.2 * studentEvaluations.size();
 
         return (totalEvaluation / 10.2) * (config.getInteger("fuzzylogic.rate") / 100d) + (45d * studentEvaluations.size() - gaps())
-                / (45d * studentEvaluations.size()) * ((100d - config.getInteger("fuzzylogic.rate")) / 100d) + diffEvaluation * 0.2;
+                / (45d * studentEvaluations.size()) * ((100d - config.getInteger("fuzzylogic.rate")) / 100d) + diffEvaluation * 0.2 - distRate * 0.4;
     }
 
     //Computes the total number of gaps which students have
