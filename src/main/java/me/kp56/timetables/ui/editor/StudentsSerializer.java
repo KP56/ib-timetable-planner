@@ -45,7 +45,7 @@ public class StudentsSerializer {
                 FileOutputStream fileOutputStream = new FileOutputStream(fileChooser.getSelectedFile());
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
         ) {
-            for (Student student : Student.students) {
+            for (Student student : Student.getStudents()) {
                 objectOutputStream.writeObject(student);
             }
             JOptionPane.showMessageDialog(null, "Students successfully saved to " + fileChooser.getSelectedFile().getName() + ".", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -64,9 +64,9 @@ public class StudentsSerializer {
                     FileInputStream fileInputStream = new FileInputStream(fileChooser.getSelectedFile());
                     ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             ) {
-                Student.students.clear();
+                Student.clearStudents();
                 for (; ; ) {
-                    Student.students.add((Student) objectInputStream.readObject());
+                    Student.addStudent((Student) objectInputStream.readObject());
                 }
             } catch (FileNotFoundException e) {
                 JOptionPane.showMessageDialog(null, "Failed to open file.", "Could not open", JOptionPane.ERROR_MESSAGE);

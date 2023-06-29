@@ -16,13 +16,6 @@ public class RunMenu extends JMenu {
 
         JMenuItem combine = new JMenuItem("Run with reference");
         combine.addActionListener(actionEvent -> {
-            File runsDir = new File("runs");
-            if (!runsDir.exists()) {
-                JOptionPane.showMessageDialog(new JFrame(), "No timetables have been generated. Use the run option first.",
-                        "Use the run option first", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
             JFileChooser jFileChooser = new JFileChooser();
             jFileChooser.setFileFilter(new FileNameExtensionFilter("Timetable files", "timetable"));
             int returnVal = jFileChooser.showOpenDialog(null);

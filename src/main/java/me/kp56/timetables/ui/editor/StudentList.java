@@ -34,7 +34,7 @@ public class StudentList extends JPanel {
                 name = "Bezimienny";
             }
             Student newStudent = new Student(name);
-            Student.students.add(newStudent);
+            Student.addStudent(newStudent);
             refresh();
             root.studentDetails.showStudent(newStudent);
         });
@@ -48,7 +48,7 @@ public class StudentList extends JPanel {
 
     public void refresh() {
         studentDefaultListModel.clear();
-        for (Student student : Student.students) {
+        for (Student student : Student.getStudents()) {
             studentDefaultListModel.addElement(student);
         }
     }

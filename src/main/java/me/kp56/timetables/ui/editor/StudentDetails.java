@@ -48,7 +48,7 @@ public class StudentDetails extends JPanel {
                 }
                 case "Delete" -> {
                     if (JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this student?", "Confirm deletion", JOptionPane.YES_NO_OPTION) == 0) {
-                        Student.students.remove(root.studentSelector.getSelected());
+                        Student.removeStudent(root.studentSelector.getSelected());
                         currentStudent = null;
                     }
                 }

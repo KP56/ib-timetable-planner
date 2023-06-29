@@ -13,11 +13,7 @@ public class FixerCache {
     private static final Config config = Config.getInstance();
 
     private List<List<Integer>> graph;
-    private List<List<Integer>> revGraph;
     private List<Group> allGroups;
-
-    private List<Integer> revTopSort;
-    private Integer[] longestPathFrom;
     private Timetable reference;
     private Map<Subject, List<String>> teachersReference;
 
@@ -54,76 +50,6 @@ public class FixerCache {
                 }
             }
         }
-
-        //Turning the graph into a Directed Acyclic Graph using DFS
-        boolean[] vis = new boolean[graph.size()];
-        for (int i = 0; i < graph.size(); i++) {
-            if (!vis[i]) {
-                turnIntoDAGRec(i, vis);
-            }
-        }
-
-        //Creating a reverse graph
-        revGraph = new ArrayList<>();
-        for (int i = 0; i < graph.size(); i++) {
-            revGraph.add(new ArrayList<>());
-        }
-
-        for (int i = 0; i < graph.size(); i++) {
-            for (int j : graph.get(i)) {
-                revGraph.get(j).add(i);
-            }
-        }
-
-        //Computing Topological Sort of the reverse graph
-        vis = new boolean[revGraph.size()];
-        Stack<Integer> topSortSol = new Stack<>();
-        for (int i = 0; i < revGraph.size(); i++) {
-            if (!vis[i]) {
-                topSortRec(i, vis, topSortSol);
-            }
-        }
-
-        revTopSort = new ArrayList<>();
-        while (!topSortSol.isEmpty()) {
-            revTopSort.add(topSortSol.pop());
-        }
-
-        //Finding the highest total number of groups of the path with that highest value from current vertex
-        longestPathFrom = new Integer[graph.size()];
-        for (int i = 0; i < graph.size(); i++) {
-            longestPathFrom[i] = allGroups.get(i).subjects.size();
-        }
-        for (int i : revTopSort) {
-            for (int j : graph.get(i)) {
-                longestPathFrom[i] = Math.max(longestPathFrom[i], longestPathFrom[j] + allGroups.get(i).subjects.size());
-            }
-        }
-
-        //This longestPathFrom array will be used as a good heuristic function for finding the best group to choose next from the current one
-    }
-
-    private void topSortRec(int at, boolean[] vis, Stack<Integer> topSortSol) {
-        vis[at] = true;
-
-        for (int i : revGraph.get(at)) {
-            if (!vis[i]) {
-                topSortRec(i, vis, topSortSol);
-            }
-        }
-
-        topSortSol.add(at);
-    }
-
-    private void turnIntoDAGRec(int at, boolean[] vis) {
-        vis[at] = true;
-
-        for (int i : graph.get(at)) {
-            if (!vis[i]) {
-                graph.get(i).remove((Integer) at);
-                turnIntoDAGRec(i, vis);
-            }
-        }
     }
 
     public boolean fix(Timetable timetable, List<Integer> daysToCheck, int tries) {
@@ -157,7 +83,6 @@ public class FixerCache {
             }
         }
 
-        //Construct paths by making the probability of selecting an item proportional to the corresponding value of longestPathFrom
         while (!subjectMap.isEmpty()) {
             Collections.shuffle(daysToCheck);
             int continueCounter = 0;
@@ -169,6 +94,14 @@ public class FixerCache {
                             dailyMap.replace(s, dailyMap.get(s) + 1);
                         } else {
                             dailyMap.put(s, 1);
+                        }
+
+                        for (Subject s2 : s.connectedTo) {
+                            if (!dailyMap.containsKey(s2)) {
+                                dailyMap.put(s2, 1);
+                            } else {
+                                dailyMap.replace(s2, dailyMap.get(s2) + 1);
+                            }
                         }
                     }
                 }
@@ -183,33 +116,37 @@ public class FixerCache {
                 }
 
                 List<Group> groups = new ArrayList<>();
-                List<Integer> unnormalized = new ArrayList<>();
                 List<Integer> unnormalizedIndexes = new ArrayList<>();
-                for (int i = 0; i < longestPathFrom.length; i++) {
+                for (int i = 0; i < allGroups.size(); i++) {
                     Group g = allGroups.get(i);
                     if (!g.isMaximal) continue;
                     if (!canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size()))
                         continue;
-                    unnormalized.add(longestPathFrom[i]);
+                    //Taking into account running with reference
+                    if (reference != null && ((g.subjects.size() != 1 || g.subjects.toArray(new Subject[0])[0] != Subject.Z_WYCH)
+                            && !canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size() + 1)))
+                        continue;
                     unnormalizedIndexes.add(i);
                 }
 
-                if (unnormalized.isEmpty()) {
-                    for (int i = 0; i < longestPathFrom.length; i++) {
+                if (unnormalizedIndexes.isEmpty()) {
+                    for (int i = 0; i < allGroups.size(); i++) {
                         Group g = allGroups.get(i);
                         if (!canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size()))
                             continue;
-                        unnormalized.add(longestPathFrom[i]);
+                        if (reference != null && ((g.subjects.size() != 1 || g.subjects.toArray(new Subject[0])[0] != Subject.Z_WYCH)
+                                && !canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size() + 1)))
+                            continue;
                         unnormalizedIndexes.add(i);
                     }
                 }
 
-                if (unnormalized.isEmpty()) {
+                if (unnormalizedIndexes.isEmpty()) {
                     continueCounter++;
                     continue;
                 }
-                List<Double> probabilities = Runner.normalizeProbabilities(unnormalized);
-                int current = unnormalizedIndexes.get(Runner.randomItem(probabilities));
+
+                int current = unnormalizedIndexes.get((int) (Math.random() * unnormalizedIndexes.size()));
                 Group currentGroup = allGroups.get(current);
                 updateMaps(currentGroup, subjectMap, dailyMap);
                 if (groups.size() + 1 < 11 - timetable.days[day].size() && canAddGroup(currentGroup, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size() + 1)) {
@@ -219,21 +156,21 @@ public class FixerCache {
 
                 groups.add(currentGroup);
                 while (!graph.get(current).isEmpty() && groups.size() < 10 - timetable.days[day].size() && !subjectMap.isEmpty()) {
-                    List<Integer> copy = new ArrayList<>();
                     List<Integer> indexes = new ArrayList<>();
                     for (int i : graph.get(current)) {
                         Group g = allGroups.get(i);
                         if (!canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size()))
                             continue;
-                        copy.add(longestPathFrom[i]);
+                        if (reference != null && ((g.subjects.size() != 1 || g.subjects.toArray(new Subject[0])[0] != Subject.Z_WYCH)
+                                && !canAddGroup(g, subjectMap, dailyMap, day, timetable.days[day].size() + groups.size() + 1)))
+                            continue;
                         indexes.add(i);
                     }
 
-                    if (copy.isEmpty()) {
+                    if (indexes.isEmpty()) {
                         break;
                     }
-                    List<Double> newProbabilities = Runner.normalizeProbabilities(copy);
-                    current = indexes.get(Runner.randomItem(newProbabilities));
+                    current = indexes.get((int) (Math.random() * indexes.size()));
                     currentGroup = allGroups.get(current);
                     updateMaps(currentGroup, subjectMap, dailyMap);
 
@@ -257,7 +194,7 @@ public class FixerCache {
         }
 
         //Checking whether there exists a student which has no lessons on a particular day
-        for (Student student : Student.students) {
+        for (Student student : Student.getStudents()) {
             if (!student.isTeacher) {
                 dayLoop:
                 for (List<Group> groups : timetable.days) {
@@ -278,26 +215,6 @@ public class FixerCache {
         return true;
     }
 
-    private boolean containsEvenSubject(Group group) {
-        for (Subject s : group.subjects) {
-            if (s.limit % 2 == 0) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private boolean canAddGroupForSecondTime(Group currentGroup, Map<Subject, Integer> subjectMap, Map<Subject, Integer> dailyMap) {
-        for (Subject s : currentGroup.subjects) {
-            if (Objects.equals(subjectMap.get(s), 1) || Objects.equals(dailyMap.get(s), config.getInteger("maximum_daily_subjects") - 1)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     private boolean canAddGroup(Group currentGroup, Map<Subject, Integer> subjectMap, Map<Subject, Integer> dailyMap, int day, int i) {
         if (reference != null) {
             if (reference.days[day].size() > i) {
@@ -305,10 +222,12 @@ public class FixerCache {
                 List<String> teachers = new ArrayList<>();
 
                 for (Subject s : referenceSubjects) {
-                    teachers.addAll(teachersReference.get(s));
+                    if (teachersReference.containsKey(s)) {
+                        teachers.addAll(teachersReference.get(s));
+                    }
                 }
 
-                for (Student s : Student.students) {
+                for (Student s : Student.getStudents()) {
                     if (s.isTeacher) {
                         for (Subject sub : currentGroup.subjects) {
                             if (s.subjects.contains(sub))
@@ -323,10 +242,9 @@ public class FixerCache {
             }
         }
 
-        for (Student student : currentGroup.students) {
-            Filter f = Filter.byName(student.name);
 
-            if (f != null) {
+        for (Filter f : Filter.getFilters()) {
+            if (currentGroup.students.contains(Student.byName(f.person()))) {
                 for (Period period : f.periods()) {
                     if (period.isWithin(day, i)) {
                         return false;
@@ -338,6 +256,12 @@ public class FixerCache {
         for (Subject s : currentGroup.subjects) {
             if (!subjectMap.containsKey(s) || (dailyMap.containsKey(s) && dailyMap.get(s) == config.getInteger("maximum_daily_subjects"))) {
                 return false;
+            }
+
+            for (Subject s2 : s.connectedTo) {
+                if (dailyMap.containsKey(s2) && dailyMap.get(s2) == config.getInteger("maximum_daily_subjects")) {
+                    return false;
+                }
             }
         }
 
@@ -354,6 +278,14 @@ public class FixerCache {
             }
             if (subjectMap.get(s) == 0) {
                 subjectMap.remove(s);
+            }
+
+            for (Subject s2 : s.connectedTo) {
+                if (!dailyMap.containsKey(s2)) {
+                    dailyMap.put(s2, 1);
+                } else {
+                    dailyMap.replace(s2, dailyMap.get(s2) + 1);
+                }
             }
         }
     }

@@ -55,6 +55,37 @@ public class Config {
         booleanSettings.put("french_b.connected", false);
         booleanSettings.put("geography.connected", false);
 
+        valueSettings.put("history_sl.groups", 1);
+        valueSettings.put("history_hl.groups", 1);
+        valueSettings.put("math_aa_sl.groups", 1);
+        valueSettings.put("math_aa_hl.groups", 1);
+        valueSettings.put("math_ai.groups", 1);
+        valueSettings.put("economics_sl.groups", 1);
+        valueSettings.put("economics_hl.groups", 1);
+        valueSettings.put("polish_a_sl.groups", 1);
+        valueSettings.put("polish_a_hl.groups", 1);
+        valueSettings.put("polish_n.groups", 1);
+        valueSettings.put("english_a_sl.groups", 1);
+        valueSettings.put("english_a_hl.groups", 1);
+        valueSettings.put("english_b.groups", 1);
+        valueSettings.put("german_b_sl.groups", 1);
+        valueSettings.put("german_b_hl.groups", 1);
+        valueSettings.put("spanish_b_sl.groups", 1);
+        valueSettings.put("spanish_b_hl.groups", 1);
+        valueSettings.put("biology_sl.groups", 1);
+        valueSettings.put("biology_hl.groups", 1);
+        valueSettings.put("chemistry_sl.groups", 1);
+        valueSettings.put("chemistry_hl.groups", 1);
+        valueSettings.put("physics_sl.groups", 1);
+        valueSettings.put("physics_hl.groups", 1);
+        valueSettings.put("computer_science_sl.groups", 1);
+        valueSettings.put("computer_science_hl.groups", 1);
+        valueSettings.put("french_b_sl.groups", 1);
+        valueSettings.put("french_b_hl.groups", 1);
+        valueSettings.put("geography_sl.groups", 1);
+        valueSettings.put("geography_hl.groups", 1);
+        valueSettings.put("tok.groups", 1);
+
         load();
     }
 

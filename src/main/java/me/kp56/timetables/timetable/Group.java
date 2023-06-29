@@ -15,7 +15,7 @@ public class Group implements Serializable {
 
     public Group(Set<Subject> subjects) {
         this.subjects = subjects;
-        for (Student student : Student.students) {
+        for (Student student : Student.getStudents()) {
             for (Subject subject : subjects) {
                 if (student.subjects.contains(subject)) {
                     if (!students.add(student)) {

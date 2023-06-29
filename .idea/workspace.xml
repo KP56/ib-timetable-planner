@@ -5,25 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="72eea587-cdb7-4538-8f65-2dea70f0a16a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/filters/Filter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/filters/FilterMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/filters/ManageFilters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings" beforeDir="false" afterPath="$PROJECT_DIR$/settings" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/fuzzylogic/FuzzyContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/fuzzylogic/FuzzyContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/configuration/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/configuration/Config.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/pdf/TimetableToPDFConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/pdf/TimetableToPDFConverter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/run/Runner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/run/Runner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/students/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/students/Student.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/Group.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/Subject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/Subject.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/Timetable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/Timetable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/combine/Combiner.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/fix/FixerCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/timetable/fix/FixerCache.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/UI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/UI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/MenuBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/MenuBar.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/StudentDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/StudentDetails.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/StudentEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/StudentEditor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/StudentList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/StudentList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/StudentsSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/StudentsSerializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/SubjectSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/editor/SubjectSelector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/run/RunMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/run/RunMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/run/SingleClassTeachers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/run/SingleClassTeachers.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/run/TwoClassTeachers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/run/TwoClassTeachers.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/settings/SettingsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/me/kp56/timetables/ui/settings/SettingsMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/configuration/Config.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/configuration/Config.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/pdf/TimetableToPDFConverter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/pdf/TimetableToPDFConverter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/students/Student.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/students/Student.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/timetable/Group.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/timetable/Group.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/timetable/Subject.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/timetable/Subject.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/timetable/Timetable.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/timetable/Timetable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/timetable/fix/FixerCache.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/timetable/fix/FixerCache.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/ui/editor/StudentDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/ui/editor/StudentDetails.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/ui/editor/StudentList.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/ui/editor/StudentList.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/ui/editor/StudentsSerializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/ui/editor/StudentsSerializer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/ui/editor/SubjectSelector.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/ui/editor/SubjectSelector.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/ui/run/RunMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/ui/run/RunMenu.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/ui/run/SingleClassTeachers.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/ui/run/SingleClassTeachers.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/kp56/timetables/ui/run/TwoClassTeachers.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/me/kp56/timetables/ui/run/TwoClassTeachers.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,5 +115,16 @@
       <updated>1683015706667</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

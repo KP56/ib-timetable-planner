@@ -99,9 +99,7 @@ public class SingleClassTeachers extends JFrame {
 
             //@Wasymir's idea, treating each teacher as a student who has the subjects they teach
             for (Map.Entry<String, List<Subject>> teacherEntry : reverseMap.entrySet()) {
-                if (teacherEntry.getValue().size() > 1) {
-                    Student.students.add(new Student(teacherEntry.getKey(), teacherEntry.getValue(), true));
-                }
+                Student.addStudent(new Student(teacherEntry.getKey(), teacherEntry.getValue(), true));
             }
 
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));

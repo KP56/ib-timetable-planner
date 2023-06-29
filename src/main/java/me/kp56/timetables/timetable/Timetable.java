@@ -54,9 +54,9 @@ public class Timetable implements Serializable {
         int worstStart = 0;
         int worstEnd = 0;
 
-        int nonTeachers = (int) Student.students.stream().filter((student) -> !student.isTeacher).count();
+        int nonTeachers = (int) Student.getStudents().stream().filter((student) -> !student.isTeacher).count();
 
-        for (Student student : Student.students) {
+        for (Student student : Student.getStudents()) {
             if (!student.isTeacher) {
                 for (List<Group> groups : days) {
                     int start = 0;
@@ -105,7 +105,7 @@ public class Timetable implements Serializable {
         converter.toPDF(new File(file + "/timetable.pdf"));
 
         //Writing a separate timetable for each student
-        for (Student student : Student.students) {
+        for (Student student : Student.getStudents()) {
             if (!student.isTeacher) {
                 converter.toPDF(new File(file + "/" + student.name + "-timetable.pdf"), student);
             }
@@ -119,7 +119,7 @@ public class Timetable implements Serializable {
         try {
             FileOutputStream fos = new FileOutputStream(file + "/binary-timetable.timetable");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            clazz = new File(file).getParentFile().getParentFile().getParentFile().getParentFile().getName();
+            clazz = new File(file).getParentFile().getParentFile().getParentFile().getName();
             oos.writeObject(this);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -240,11 +240,13 @@ public class Timetable implements Serializable {
         weeklyGaps.modifyRecord(14, 10, 0, 0, 3, 0);
         weeklyGaps.modifyRecord(15, 10, 0, 0, 3, 0);
 
-        int nonTeachers = (int) Student.students.stream().filter((student) -> !student.isTeacher).count();
+        int nonTeachers = (int) Student.getStudents().stream().filter((student) -> !student.isTeacher).count();
+
+        boolean reduce = false;
 
         double totalEvaluation = 0;
         List<Double> studentEvaluations = new ArrayList<>();
-        for (Student student : Student.students) {
+        for (Student student : Student.getStudents()) {
             if (!student.isTeacher) {
                 //Evaluating each student seperately
                 double studentEvaluation = 0;
@@ -288,7 +290,7 @@ public class Timetable implements Serializable {
                     int totalLessonsCount = end - start + 1;
 
                     if (totalLessonsCount == 11 && gaps == 0) {
-                        return 0;
+                        reduce = true;
                     }
 
                     List<List<Double>> parameters = new ArrayList<>();
@@ -330,10 +332,26 @@ public class Timetable implements Serializable {
         for (int day = 0; day < 5; day++) {
             for (Group g : days[day]) {
                 for (Subject s : g.subjects) {
+                    int dist = Integer.MAX_VALUE;
                     if (!previousPlace.containsKey(s)) {
                         previousPlace.put(s, day);
                     } else {
-                        int dist = day - previousPlace.get(s);
+                        dist = day - previousPlace.get(s);
+
+                        previousPlace.replace(s, day);
+                    }
+
+                    for (Subject s2 : s.connectedTo) {
+                        if (!previousPlace.containsKey(s2)) {
+                            previousPlace.put(s2, day);
+                        } else {
+                            dist = Math.min(day - previousPlace.get(s2), dist);
+
+                            previousPlace.replace(s2, day);
+                        }
+                    }
+
+                    if (dist != Integer.MAX_VALUE) {
                         if (!distances.containsKey(s)) {
                             if (dist < 2) {
                                 distances.put(s, 1);
@@ -343,7 +361,6 @@ public class Timetable implements Serializable {
                                 distances.replace(s, distances.get(s) + 1);
                             }
                         }
-                        previousPlace.replace(s, day);
                     }
                 }
             }
@@ -367,14 +384,20 @@ public class Timetable implements Serializable {
         }
         diffEvaluation /= 10.2 * studentEvaluations.size();
 
-        return (totalEvaluation / 10.2) * (config.getInteger("fuzzylogic.rate") / 100d) + (45d * studentEvaluations.size() - gaps())
+        double fitness = (totalEvaluation / 10.2) * (config.getInteger("fuzzylogic.rate") / 100d) + (45d * studentEvaluations.size() - gaps())
                 / (45d * studentEvaluations.size()) * ((100d - config.getInteger("fuzzylogic.rate")) / 100d) + diffEvaluation * 0.2 - distRate * 0.4;
+
+        if (reduce) {
+            return fitness / 2;
+        } else {
+            return fitness;
+        }
     }
 
     //Computes the total number of gaps which students have
     public int gaps() {
         int noLessons = 0;
-        for (Student student : Student.students) {
+        for (Student student : Student.getStudents()) {
             if (!student.isTeacher) {
                 for (List<Group> groups : days) {
                     int start = 0;
@@ -408,7 +431,7 @@ public class Timetable implements Serializable {
     //Calculates the highest number of gaps a student can have
     public int worstGaps() {
         int worstGaps = 0;
-        for (Student student : Student.students) {
+        for (Student student : Student.getStudents()) {
             if (!student.isTeacher) {
                 int noLessons = 0;
                 for (List<Group> groups : days) {

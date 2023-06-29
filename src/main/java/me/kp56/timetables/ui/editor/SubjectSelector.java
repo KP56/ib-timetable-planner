@@ -9,27 +9,15 @@ import java.util.*;
 public class SubjectSelector extends JPanel {
     private Map<Subject, JCheckBox> buttons;
     private JPanel column1;
-    private JPanel column2;
 
     public SubjectSelector() {
         buttons = new HashMap<>();
-        column1 = new JPanel();
-        column2 = new JPanel();
-        column1.setLayout(new BoxLayout(column1, BoxLayout.PAGE_AXIS));
-        column2.setLayout(new BoxLayout(column2, BoxLayout.PAGE_AXIS));
-        this.setLayout(new GridLayout(1, 2));
-        this.add(column1);
-        this.add(column2);
-
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         for (Subject subject : Subject.values()) {
             JCheckBox button = new JCheckBox(subject.toString());
+            this.add(button);
             button.setVisible(true);
             buttons.put(subject, button);
-            if (subject.toString().contains("2")) {
-                column2.add(button);
-            } else {
-                column1.add(button);
-            }
         }
     }
 
